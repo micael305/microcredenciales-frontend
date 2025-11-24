@@ -1,0 +1,79 @@
+
+/* Contenedor principal del Header (Fijo arriba) */
+.header {
+  background-color: #003366; 
+  width: 100%;
+  height: 4rem; 
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+  padding: 0 1.5rem; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+}
+
+/* Contenedor interno para centrar y distribuir contenido */
+.header-container {
+  max-width: 80rem;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Estilo del Logo / Título */
+.header-logo {
+  color: white;
+  font-weight: 700; 
+  font-size: 1.125rem; 
+  cursor: pointer;
+  transition: opacity 0.2s;
+  user-select: none;
+}
+
+.header-logo:hover {
+  opacity: 0.9;
+}
+
+/* Menú de navegación derecho */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; 
+}
+
+/* Enlace de verificación pública */
+.nav-link {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: #e5e7eb; /* gray-200 */
+}
+
+/* Botón de Iniciar Sesión
+.btn-login-header {
+  background-color: #14b8a6; 
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem; 
+  padding: 0.5rem 1rem; 
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s;
+} */
+
+.btn-login-header:hover {
+  background-color: #0d9488; 
+}

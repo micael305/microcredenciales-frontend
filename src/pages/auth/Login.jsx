@@ -1,34 +1,76 @@
 import { useState } from "react";
-import {supabase} from "../../supabase/Client";
+import { supabase } from "../../supabase/Client.js";
 import { useNavigate } from 'react-router-dom';
+import Header from "../../components/Header/Header.jsx";
+import Footer from "../../components/Footer/Footer.jsx";
+import "./auth.css"; 
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); //no recargar la pagina
+    e.preventDefault();
+    setLoading(true);
     try {
-      const result = await supabase.auth.signInWithPassword({email: email, password: password});
-      console.log(result);
-    }catch (error) {
-      console.log("Error al iniciar sesión: ", error.message);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+      if (error) throw error;
+      if (data.user) navigate('/'); 
+    } catch (error) {
+      alert("Error: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <>
-    <button onClick={() => navigate('/')}>Volver</button>
-      <form onSubmit={handleSubmit}>
-        <input type="email" name="email" placeholder="tuemail@email.com" 
-        onChange={e => setEmail(e.target.value)}/>
-        <input type="password" name="password" placeholder="tu contraseña"
-        onChange={e => setPassword(e.target.value)}/>
-        <button type="submit">Login</button>
-      </form>
-    </>
-  )
+    <div className="page-container">
+      <Header />
+
+      <main className="main-content-centered">
+        <div className="auth-card">
+            <h2 className="auth-title">Acceso Alumno</h2>
+
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label className="form-label">Email</label>
+                    <input 
+                        required
+                        type="text"
+                        placeholder="emailejemplo@email.com" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="form-input"
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Contraseña</label>
+                    <input 
+                        required
+                        type="password"
+                        placeholder="••••••••••••"
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="form-input"
+                    />
+                </div>
+
+                <button type="submit" disabled={loading} className="btn-primary">
+                    {loading ? "Cargando..." : "Entrar al Portal"}
+                </button>
+            </form>
+   
+        </div>
+      </main>
+
+      <Footer/>
+    </div>
+  );
 }
 
 export default Login;
