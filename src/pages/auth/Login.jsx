@@ -1,9 +1,11 @@
 import { useState } from "react";
-import {supabase} from "../supabase/Client";
+import {supabase} from "../../supabase/Client";
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault(); //no recargar la pagina
@@ -17,6 +19,7 @@ function Login() {
 
   return (
     <>
+    <button onClick={() => navigate('/')}>Volver</button>
       <form onSubmit={handleSubmit}>
         <input type="email" name="email" placeholder="tuemail@email.com" 
         onChange={e => setEmail(e.target.value)}/>

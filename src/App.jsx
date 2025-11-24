@@ -1,13 +1,20 @@
 import './App.css'
-import SignUp from './pages/SignUp.jsx'
-import Login from './pages/login.jsx'
+import {Routes, Route} from 'react-router-dom'
+import NotFound from './pages/NotFound.jsx'
+//Vistas de autenticacion
+import Login from './pages/auth/Login.jsx'
+import SignUp from './pages/auth/SignUp.jsx' 
+import Home from './pages/auth/Home.jsx'
+
 
 function App() {
   return (
-    <>
-      <SignUp  />
-      <Login />
-    </>
+    <Routes>
+      <Route  path='/' element={<Home/>}/>
+      <Route  path='/login' element={<Login/>}/>
+      <Route  path='/signup' element={<SignUp/>}/>
+      <Route  path='*' element={<NotFound/>}/>
+    </Routes>
   )
 }
 
