@@ -60,8 +60,8 @@
   color: #e5e7eb; /* gray-200 */
 }
 
-/* Botón de Iniciar Sesión
-.btn-login-header {
+/* Botón de Cerrar Sesión */
+.btn-logout-header {
   background-color: #14b8a6; 
   color: white;
   font-weight: 700;
