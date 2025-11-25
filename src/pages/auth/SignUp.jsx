@@ -1,62 +1,77 @@
 import { useState } from "react";
 import { supabase } from "../../supabase/Client";
 import { useNavigate } from 'react-router-dom';
+import Header from "../../components/Header/Header.jsx";
+import Footer from "../../components/Footer/Footer.jsx";
 import "./auth.css";
 
 function SignUp() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const result = await supabase.auth.signUp({email, password});
-      if(!result.error) alert("Revisa tu correo para confirmar la cuenta");
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password
+      });
+      if (error) throw error;
+      if (data.user) navigate('/'); 
     } catch (error) {
-      console.log("Error al registrarse: ", error.message);
+      alert("Error: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="page-container">
+      <Header />
+
       <main className="main-content-centered">
         <div className="auth-card">
+          <button className="btn-link" onClick={() => navigate('/')}>&lt;   Volver</button>
             <h2 className="auth-title">Crear Cuenta</h2>
-            
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                 <label className="form-label">Email</label>
-                 <input 
-                    type="email" 
-                    placeholder="Email" 
-                    className="form-input"
-                    onChange={(e) => setEmail(e.target.value)} 
-                />
-              </div>
-              
-              <div className="form-group">
-                <label className="form-label">Contraseña</label>
-                <input 
-                    type="password" 
-                    placeholder="Contraseña" 
-                    className="form-input"
-                    onChange={(e) => setPassword(e.target.value)} 
-                />
-              </div>
-              
-              <button type="submit" className="btn-secondary">
-                Registrarse
-              </button>
-            </form>
 
-            <button onClick={() => navigate('/')} className="btn-link">
-                ← Volver al inicio
-            </button>
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label className="form-label">Email</label>
+                    <input 
+                        required
+                        type="text"
+                        placeholder="emailejemplo@email.com" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="form-input"
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Contraseña</label>
+                    <input 
+                        required
+                        type="password"
+                        placeholder="••••••••••••"
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="form-input"
+                    />
+                </div>
+
+                <button type="submit" disabled={loading} className="btn-primary">
+                    {loading ? "Cargando..." : "Crear Cuenta"}
+                </button>
+            </form>
+   
         </div>
       </main>
+
+      <Footer/>
     </div>
-  )
+  );
 }
 
 export default SignUp;

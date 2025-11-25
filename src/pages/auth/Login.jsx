@@ -34,10 +34,11 @@ function Login() {
 
       <main className="main-content-centered">
         <div className="auth-card">
+            <button className="btn-link" onClick={() => navigate('/')}>&lt;   Volver</button>
             <h2 className="auth-title">Acceso Alumno</h2>
 
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
+                <div className="form-group"> 
                     <label className="form-label">Email</label>
                     <input 
                         required

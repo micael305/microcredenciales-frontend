@@ -164,6 +164,14 @@
   gap: 1rem;
 }
 
+.btn-link {
+  text-align: left;
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-top: auto; 
+  padding: 0;
+}
+
 .btn-hero-primary {
   background-color: #003366;
   color: white;
