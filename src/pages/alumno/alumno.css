@@ -1,0 +1,12 @@
+/* ------------------ Dashboard ------------------------- */
+
+.dashboard-container {
+    color: black;
+    min-height: 500px;
+}
+
+.starcard-container {
+    display: flex;       
+    gap: 20px;           
+    margin-top: 20px;    
+}

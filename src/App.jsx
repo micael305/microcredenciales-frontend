@@ -7,6 +7,10 @@ import {supabase} from './supabase/Client.js'
 import Login from './pages/auth/Login.jsx'
 import SignUp from './pages/auth/SignUp.jsx' 
 import Home from './pages/auth/Home.jsx'
+
+//Vistas de alumno
+import Alumno from './pages/alumno/Dashboard.jsx'
+
 //Not Found
 import NotFound from './pages/NotFound.jsx'
 
@@ -18,8 +22,8 @@ function App() {
         navigate('/login');
         console.log("no hay sesion");
       }else{
-        navigate('*');
-        console.log("hay sesion");
+        navigate('/alumno');
+        console.log("Hay sesion");
       }
     })
   }, []);
@@ -28,6 +32,7 @@ function App() {
       <Route  path='/' element={<Home/>}/>
       <Route  path='/login' element={<Login/>}/>
       <Route  path='/signup' element={<SignUp/>}/>
+      <Route  path='/alumno' element={<Alumno/>}/>
       <Route  path='*' element={<NotFound/>}/>
     </Routes>
   )
