@@ -16,11 +16,14 @@ function Login() {
     setLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.trim(),
         password
       });
-      if (error) throw error;
-      if (data.user) navigate('/'); 
+      if (error) {
+        alert("Error: " + error.message);
+        return;
+      }
+      if (data.user) navigate('/alumno'); 
     } catch (error) {
       alert("Error: " + error.message);
     } finally {

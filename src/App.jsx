@@ -16,8 +16,9 @@ import NotFound from './pages/NotFound.jsx'
 
 function App() {
   const navigate = useNavigate();
+
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       if(!session){
         navigate('/login');
         console.log("no hay sesion");
@@ -25,8 +26,13 @@ function App() {
         navigate('/alumno');
         console.log("Hay sesion");
       }
-    })
-  }, []);
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [navigate]);
+
   return (
     <Routes>
       <Route  path='/' element={<Home/>}/>

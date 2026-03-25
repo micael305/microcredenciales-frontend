@@ -2,15 +2,27 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #f3f4f6; 
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #f3f4f6; /* Este es el color gris clarito del fondo de la página */
+
+  /* Paleta de Colores Global */
+  --color-text-title: #102A43; 
+  --color-text-main: #102A43; 
+  --color-text-body: #627D98; 
+  --color-text-secondary: #627D98; 
+  --color-badge-active-bg: #D1F4EA; 
+  --color-badge-active-text: #088761; 
+  --color-link-teal: #1AC7B8; 
+  --color-accent-orange: #FF8F1F; 
+  --color-card-bg: #FFFFFF;
+  --color-shadow: rgba(0, 0, 0, 0.04); 
 }
+
 
 a {
   font-weight: 500;
@@ -23,8 +35,6 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
