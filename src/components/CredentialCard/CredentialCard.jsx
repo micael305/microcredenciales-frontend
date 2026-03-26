@@ -1,17 +1,24 @@
+import { LuDownload } from "react-icons/lu";
+import { MdShare } from 'react-icons/md';
 import './credentialCard.css';
 function CredentialCard({ title, issuer, issueDate, status = 'Activa' }) {
 
-    const statusClass = status.toLowerCase() === 'activa' ? 'status-badge--active' : 'status-badge--inactive';
+  const statusClass = status.toLowerCase() === 'activa' ? 'status-badge--active' : 'status-badge--inactive';
 
   return (
     <article className="credential-card">
       <div className="credential-card__header">
-        {/* Insignia de estado */}
         <span className={`status-badge ${statusClass}`}>
           {status}
         </span>
-        {/* Checkbox superior derecho */}
-        <input type="checkbox" className="credential-card__checkbox" />
+         <div className="credential-card__actions-top">
+          <button className="credential-card__action-btn" title="Compartir credencial">
+            <MdShare />
+          </button>
+          <button className="credential-card__action-btn" title="Descargar credencial">
+            <LuDownload />
+          </button>
+        </div>
       </div>
 
       <div className="credential-card__body">
@@ -23,8 +30,7 @@ function CredentialCard({ title, issuer, issueDate, status = 'Activa' }) {
         </p>
       </div>
 
-      <div className="credential-card__footer">
-        {/* Enlace simulado (puedes cambiarlo por <Link> de react-router si lo usas) */}
+      <div className="credential-card__footer">   
         <a href="#" className="credential-card__link" onClick={(e) => e.preventDefault()}>
           Ver Credencial Completa →
         </a>
