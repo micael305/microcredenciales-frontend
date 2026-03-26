@@ -8,7 +8,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   color: rgba(255, 255, 255, 0.87);
-  background-color: #f3f4f6; /* Este es el color gris clarito del fondo de la página */
+  background-color: #f3f4f6; 
 
   /* Paleta de Colores Global */
   --color-text-title: #102A43; 
@@ -21,6 +21,7 @@
   --color-accent-orange: #FF8F1F; 
   --color-card-bg: #FFFFFF;
   --color-shadow: rgba(0, 0, 0, 0.04); 
+  --color-modal-item: #F8FAFC;
 }
 
 
