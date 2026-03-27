@@ -1,13 +1,18 @@
 import { useState } from "react";
+//Componentes
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import StartCard from "../../components/StartCard/StartCard";
 import CredentialCard from "../../components/CredentialCard/CredentialCard";
+//Modales
 import CredentialModal from "../../components/CredentialModal/CredentialModal";
+import ShareModal from "../../components/ShareModal/ShareModal";
+//Estilos
 import "./alumno.css";
 
 function Dashboard() {
   const [selectedCredential, setSelectedCredential] = useState(null);
+  const [credentialToShare, setCredentialToShare] = useState(null);
 
   const mockCredentials = [
   {
@@ -76,14 +81,18 @@ function Dashboard() {
             issueDate={cred.issueDate}
             status={cred.status}
             onViewDetails={() => setSelectedCredential(cred)} 
+            onShare={() => setCredentialToShare(cred)}
           />
         ))}
-      
       </div>
       <Footer />
       <CredentialModal 
         credential={selectedCredential} 
         onClose={() => setSelectedCredential(null)} 
+      />
+      <ShareModal
+        credential={credentialToShare}
+        onClose={() => setCredentialToShare(null)}
       />
     </div>
   );

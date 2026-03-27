@@ -1,7 +1,7 @@
 
 /* Contenedor principal del Header (Fijo arriba) */
 .header {
-  background-color: #003366; 
+  background-color: var(--color-blue-dark);
   width: 100%;
   height: 4rem; 
   display: flex;

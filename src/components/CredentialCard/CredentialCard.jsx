@@ -1,7 +1,7 @@
 import { LuDownload } from "react-icons/lu";
 import { MdShare } from 'react-icons/md';
 import './credentialCard.css';
-function CredentialCard({ title, issuer, issueDate, status = 'Activa', onViewDetails }) {
+function CredentialCard({ title, issuer, issueDate, status = 'Activa', onViewDetails, onShare }) {
 
   const statusClass = status.toLowerCase() === 'activa' ? 'status-badge--active' : 'status-badge--inactive';
 
@@ -12,7 +12,7 @@ function CredentialCard({ title, issuer, issueDate, status = 'Activa', onViewDet
           {status}
         </span>
          <div className="credential-card__actions-top">
-          <button className="credential-card__action-btn" title="Compartir credencial">
+          <button className="credential-card__action-btn" title="Compartir credencial" onClick={onShare}>
             <MdShare />
           </button>
           <button className="credential-card__action-btn" title="Descargar credencial">
