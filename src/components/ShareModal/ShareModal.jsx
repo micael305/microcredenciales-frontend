@@ -6,7 +6,7 @@ function ShareModal({ credential, onClose }) {
 
   if (!credential) return null;
 
-  const shareLink = `https://microcredenciales.utn.edu.ar/verificar/${credential.id}`;
+  const shareLink = `${window.location.origin}/verificar/${credential.id}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareLink);

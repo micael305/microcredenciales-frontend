@@ -11,6 +11,9 @@ import Home from './pages/auth/Home.jsx'
 //Vistas de alumno
 import Alumno from './pages/alumno/Dashboard.jsx'
 
+//Vista de verificacion publica
+import VerificacionPublica from './pages/VerificacionPublica/VerificacionPublica.jsx'
+
 //Not Found
 import NotFound from './pages/NotFound.jsx'
 
@@ -39,6 +42,7 @@ function App() {
       <Route  path='/login' element={<Login/>}/>
       <Route  path='/signup' element={<SignUp/>}/>
       <Route  path='/alumno' element={<Alumno/>}/>
+      <Route path="/verificar/:id" element={<VerificacionPublica />} />
       <Route  path='*' element={<NotFound/>}/>
     </Routes>
   )
