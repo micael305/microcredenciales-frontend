@@ -65,6 +65,11 @@ function SignUp() {
                     {loading ? "Cargando..." : "Crear Cuenta"}
                 </button>
             </form>
+
+            <div className="auth-footer">
+                <span>¿Ya tienes una cuenta? </span>
+                <button className="btn-link" onClick={() => navigate('/login')}>Inicia sesión</button>
+            </div>
    
         </div>
       </main>

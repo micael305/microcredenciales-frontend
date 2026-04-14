@@ -19,12 +19,15 @@ function App() {
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      if(!session){
-        navigate('/login');
-        console.log("no hay sesion");
-      }else{
+      const publicRoutes = ['/', '/login', '/signup'];
+      const isPublicRoute = publicRoutes.includes(window.location.pathname);
+
+      if (event === 'SIGNED_IN') {
         navigate('/alumno');
-        console.log("Hay sesion");
+      } else if (event === 'SIGNED_OUT') {
+        navigate('/login');
+      } else if (!session && !isPublicRoute) {
+        navigate('/login');
       }
     });
 
