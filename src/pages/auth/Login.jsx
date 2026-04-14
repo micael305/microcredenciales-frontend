@@ -68,6 +68,11 @@ function Login() {
                     {loading ? "Cargando..." : "Entrar al Portal"}
                 </button>
             </form>
+
+            <div className="auth-footer">
+                <span>¿No tienes una cuenta? </span>
+                <button className="btn-link" onClick={() => navigate('/signup')}>Regístrate</button>
+            </div>
    
         </div>
       </main>
