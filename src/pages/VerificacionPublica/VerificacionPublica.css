@@ -1,0 +1,68 @@
+.verificacion-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.verificacion-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 20px 40px; 
+}
+
+.verificacion-card {
+  background-color: var(--color-card-bg);
+  border-radius: 12px;
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 10px 25px var(--color-shadow);
+  text-align: center;
+  border-top: 5px solid var(--color-link-teal); /* Detalle de color superior */
+}
+
+.verificacion-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.verificacion-title {
+  color: var(--color-blue-dark);
+  font-size: 2rem;
+  margin: 0 0 15px 0;
+}
+
+.verificacion-text {
+  color: var(--color-text-main);
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+}
+
+.verificacion-data {
+  background-color: var(--color-modal-item);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.verificacion-label {
+  font-weight: bold;
+  color: var(--color-text-main);
+}
+
+.verificacion-value {
+  font-family: monospace;
+  color: var(--color-blue-dark);
+  word-break: break-all;
+}
+
+.verificacion-disclaimer {
+  font-size: 0.85rem;
+  color: var(--color-text-body);
+  margin-top: 20px;
+}
