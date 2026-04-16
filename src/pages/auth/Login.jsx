@@ -1,31 +1,27 @@
 import { useState } from "react";
-import { supabase } from "../../supabase/Client.js";
+import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import Header from "../../components/Header/Header.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
-import "./auth.css"; 
+import "./auth.css";
 
 function Login() {
-  const [email, setEmail] = useState(""); 
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password
-      });
-      if (error) {
-        alert("Error: " + error.message);
-        return;
-      }
-      if (data.user) navigate('/alumno'); 
-    } catch (error) {
-      alert("Error: " + error.message);
+      await login(email.trim(), password);
+      navigate('/alumno');
+    } catch (err) {
+      setError(err.message || "Error al iniciar sesión");
     } finally {
       setLoading(false);
     }
@@ -40,13 +36,15 @@ function Login() {
             <button className="btn-link" onClick={() => navigate('/')}>&lt;   Volver</button>
             <h2 className="auth-title">Acceso Alumno</h2>
 
+            {error && <p className="auth-error">{error}</p>}
+
             <form onSubmit={handleSubmit}>
-                <div className="form-group"> 
+                <div className="form-group">
                     <label className="form-label">Email</label>
-                    <input 
+                    <input
                         required
                         type="text"
-                        placeholder="emailejemplo@email.com" 
+                        placeholder="emailejemplo@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="form-input"
@@ -55,7 +53,7 @@ function Login() {
 
                 <div className="form-group">
                     <label className="form-label">Contraseña</label>
-                    <input 
+                    <input
                         required
                         type="password"
                         placeholder="••••••••••••"
@@ -70,10 +68,9 @@ function Login() {
             </form>
 
             <div className="auth-footer">
-                <span>¿No tienes una cuenta? </span>
-                <button className="btn-link" onClick={() => navigate('/signup')}>Regístrate</button>
+                <span>¿Primera vez? Accede desde Moodle para activar tu cuenta.</span>
             </div>
-   
+
         </div>
       </main>
 

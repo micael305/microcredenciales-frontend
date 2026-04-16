@@ -1,94 +1,135 @@
-import { useState } from "react";
-//Componentes
+import { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
+import * as api from "../../api/client";
+// Componentes
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import StartCard from "../../components/StartCard/StartCard";
 import CredentialCard from "../../components/CredentialCard/CredentialCard";
-//Modales
+// Modales
 import CredentialModal from "../../components/CredentialModal/CredentialModal";
 import ShareModal from "../../components/ShareModal/ShareModal";
-//Estilos
+// Estilos
 import "./alumno.css";
 
+const STATUS_LABELS = {
+  issued: "Emitida",
+  claimed: "Guardada",
+  pending: "Pendiente",
+};
+
+function formatDate(isoString) {
+  if (!isoString) return "—";
+  const date = new Date(isoString);
+  return date.toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
 function Dashboard() {
+  const { user } = useAuth();
+  const [credentials, setCredentials] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedCredential, setSelectedCredential] = useState(null);
   const [credentialToShare, setCredentialToShare] = useState(null);
+  const [loadingDetail, setLoadingDetail] = useState(false);
 
-  const mockCredentials = [
-  {
-    id: "cred-001",
-    title: "Introducción a la Programación con Python",
-    description: "Certifica el dominio de los fundamentos de programación estructurada y orientada a objetos usando Python para la resolución de problemas algorítmicos.",
-    issuer: "UTN-FRT",
-    department: "Dpto. de Informática",
-    issueDate: "15/05/2024",
-    status: "Activa",
-    hash: "0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d"
-  },
-  {
-    id: "cred-002",
-    title: "Desarrollo Frontend con React",
-    description: "Acredita la capacidad de crear interfaces de usuario dinámicas, interactuando con APIs y gestionando estados complejos con React.",
-    issuer: "UTN-FRT",
-    department: "Dpto. de Sistemas",
-    issueDate: "20/07/2024",
-    status: "Activa",
-    hash: "0x9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c"
-  },
-  {
-    id: "cred-003",
-    title: "Análisis de Sistemas I",
-    description: "Certifica la aprobación de la cursada, incluyendo el relevamiento, análisis y modelado de requerimientos de software.",
-    issuer: "UTN-FRT",
-    department: "Dpto. de Sistemas",
-    issueDate: "01/12/2023",
-    status: "Activa",
-    hash: "0x4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d"
-  },
-  {
-    id: "cred-004",
-    title: "Fundamentos de Blockchain",
-    description: "Acredita el conocimiento de los principios criptográficos, redes descentralizadas y la arquitectura básica de las cadenas de bloques.",
-    issuer: "UTN-FRT",
-    department: "Secretaría de Extensión",
-    issueDate: "05/06/2024",
-    status: "Activa",
-    hash: "0x2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b"
-  }
-];
-  
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [statsData, credsData] = await Promise.all([
+          api.getStats(),
+          api.getCredentials(),
+        ]);
+        setStats(statsData);
+        setCredentials(credsData);
+      } catch (err) {
+        setError(err.message || "Error al cargar los datos");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const handleViewDetails = async (cred) => {
+    setLoadingDetail(true);
+    try {
+      const detail = await api.getCredentialDetail(cred.id);
+      setSelectedCredential(detail);
+    } catch {
+      setSelectedCredential(cred);
+    } finally {
+      setLoadingDetail(false);
+    }
+  };
+
+  const emitted = stats ? stats.issued + stats.claimed : 0;
+  const pending = stats ? stats.pending : 0;
+
   return (
     <div className="dashboard-container">
-        <Header />
+      <Header />
       <div className="dashboard-header">
-          <h1>Bienvenido, Micael Abdias Rodriguez</h1>
-          <h3>Gestiona y comparte tus logros académicos de forma segura.</h3>
-          <hr className="header-divider" />
+        <h1>Bienvenido, {user?.full_name || "Alumno"}</h1>
+        <h3>Gestiona y comparte tus logros académicos de forma segura.</h3>
+        <hr className="header-divider" />
+      </div>
+
+      {loading ? (
+        <div className="dashboard-loading">
+          <p>Cargando credenciales...</p>
         </div>
+      ) : error ? (
+        <div className="dashboard-error">
+          <p>{error}</p>
+        </div>
+      ) : (
+        <>
+          <div className="starcard-container">
+            <StartCard number={emitted} label="Credenciales Emitidas" />
+            <StartCard number={pending} label="Pendientes de Aceptación" color="orange" />
+          </div>
 
-      <div className="starcard-container">
-      <StartCard number="10" />
-      <StartCard number="10" color="orange" />
-      </div>
+          <h4 className="credentialcard-title">Mis Microcredenciales</h4>
 
-      <h4 className="credentialcard-title">Mis Microcredenciales</h4>
-      <div className="credentialcard-container">
-      {mockCredentials.map((cred) => (
-          <CredentialCard 
-            key={cred.id} 
-            title={cred.title}
-            issuer={cred.issuer}
-            issueDate={cred.issueDate}
-            status={cred.status}
-            onViewDetails={() => setSelectedCredential(cred)} 
-            onShare={() => setCredentialToShare(cred)}
-          />
-        ))}
-      </div>
+          {credentials.length === 0 ? (
+            <div className="dashboard-empty">
+              <p>Aún no tienes credenciales emitidas. Completa cursos en Moodle para obtenerlas.</p>
+            </div>
+          ) : (
+            <div className="credentialcard-container">
+              {credentials.map((cred) => (
+                <CredentialCard
+                  key={cred.id}
+                  title={cred.course_name}
+                  issuer="UTN-FRT"
+                  issueDate={formatDate(cred.completion_date)}
+                  status={STATUS_LABELS[cred.status] || cred.status}
+                  onViewDetails={() => handleViewDetails(cred)}
+                  onShare={() => setCredentialToShare(cred)}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
       <Footer />
-      <CredentialModal 
-        credential={selectedCredential} 
-        onClose={() => setSelectedCredential(null)} 
+
+      {loadingDetail && (
+        <div className="modal-overlay">
+          <p style={{ color: '#fff', fontSize: '1.1rem' }}>Cargando detalle...</p>
+        </div>
+      )}
+
+      <CredentialModal
+        credential={selectedCredential}
+        onClose={() => setSelectedCredential(null)}
       />
       <ShareModal
         credential={credentialToShare}

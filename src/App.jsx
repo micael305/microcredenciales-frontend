@@ -1,52 +1,69 @@
-import {Routes, Route, useNavigate} from 'react-router-dom'
-import { useEffect } from "react";
-import './App.css';
-import {supabase} from './supabase/Client.js'
+import { Routes, Route, useNavigate, useSearchParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useAuth } from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 
-//Vistas de autenticacion
+// Vistas de autenticacion
 import Login from './pages/auth/Login.jsx'
-import SignUp from './pages/auth/SignUp.jsx' 
+import SetPassword from './pages/auth/SetPassword.jsx'
 import Home from './pages/auth/Home.jsx'
 
-//Vistas de alumno
-import Alumno from './pages/alumno/Dashboard.jsx'
+// Vistas de alumno
+import Dashboard from './pages/alumno/Dashboard.jsx'
 
-//Vista de verificacion publica
+// Vista de verificacion publica
 import VerificacionPublica from './pages/VerificacionPublica/VerificacionPublica.jsx'
 
-//Not Found
+// Not Found
 import NotFound from './pages/NotFound.jsx'
 
-function App() {
+function MoodleCallback() {
+  const { loginWithMoodleToken } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      const publicRoutes = ['/', '/login', '/signup'];
-      const isPublicRoute = publicRoutes.includes(window.location.pathname);
+    const token = searchParams.get('token');
+    if (!token) {
+      setError('Token no proporcionado. Accede desde Moodle para autenticarte.');
+      return;
+    }
 
-      if (event === 'SIGNED_IN') {
-        navigate('/alumno');
-      } else if (event === 'SIGNED_OUT') {
-        navigate('/login');
-      } else if (!session && !isPublicRoute) {
-        navigate('/login');
-      }
-    });
+    loginWithMoodleToken(token)
+      .then(() => navigate('/alumno', { replace: true }))
+      .catch((err) => setError(err.message || 'Error al autenticar con Moodle'));
+  }, []);
 
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [navigate]);
+  if (error) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', color: 'var(--color-text-main)' }}>
+        <p style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>{error}</p>
+        <button onClick={() => navigate('/login')} style={{ padding: '0.5rem 1.5rem', cursor: 'pointer' }}>
+          Ir al Login
+        </button>
+      </div>
+    );
+  }
 
   return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'var(--color-text-body)' }}>
+      <p style={{ fontSize: '1.1rem' }}>Autenticando desde Moodle...</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
     <Routes>
-      <Route  path='/' element={<Home/>}/>
-      <Route  path='/login' element={<Login/>}/>
-      <Route  path='/signup' element={<SignUp/>}/>
-      <Route  path='/alumno' element={<Alumno/>}/>
-      <Route path="/verificar/:id" element={<VerificacionPublica />} />
-      <Route  path='*' element={<NotFound/>}/>
+      <Route path='/' element={<Home />} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/auth/moodle-callback' element={<MoodleCallback />} />
+      <Route path='/alumno' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path='/configurar-password' element={<ProtectedRoute><SetPassword /></ProtectedRoute>} />
+      <Route path='/verificar' element={<VerificacionPublica />} />
+      <Route path='/verificar/:hash' element={<VerificacionPublica />} />
+      <Route path='*' element={<NotFound />} />
     </Routes>
   )
 }

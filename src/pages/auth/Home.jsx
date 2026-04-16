@@ -17,19 +17,17 @@ function Home() {
         </p>
 
         <div className="home-buttons">
-            <button 
-                onClick={() => navigate('/login')} 
+            <button
+                onClick={() => navigate('/login')}
                 className="btn-hero-primary"
             >
                 Iniciar Sesión
             </button>
-            <button 
-                onClick={() => navigate('/signup')} 
-                className="btn-hero-outline"
-            >
-                Crear Cuenta
-            </button>
         </div>
+
+        <p className="home-moodle-info">
+          ¿Primera vez? Accede desde tu plataforma Moodle para activar tu cuenta en el portal.
+        </p>
       </main>
 
       <Footer />

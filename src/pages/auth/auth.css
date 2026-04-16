@@ -227,3 +227,48 @@
 .btn-hero-outline:hover {
   background-color: #f9fafb;
 }
+
+/* --- Mensajes de estado --- */
+.auth-error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.auth-info {
+  color: var(--color-text-body, #627D98);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.auth-success {
+  text-align: center;
+  color: #065f46;
+  background-color: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.auth-success p {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+}
+
+.auth-success .btn-primary {
+  margin-top: 1rem;
+}
+
+.home-moodle-info {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-top: 1.5rem;
+  max-width: 32rem;
+  text-align: center;
+}

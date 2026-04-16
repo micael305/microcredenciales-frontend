@@ -1,9 +1,12 @@
 import { LuDownload } from "react-icons/lu";
 import { MdShare } from 'react-icons/md';
 import './credentialCard.css';
-function CredentialCard({ title, issuer, issueDate, status = 'Activa', onViewDetails, onShare }) {
 
-  const statusClass = status.toLowerCase() === 'activa' ? 'status-badge--active' : 'status-badge--inactive';
+function CredentialCard({ title, issuer, issueDate, status = 'Emitida', onViewDetails, onShare }) {
+  const statusLower = status.toLowerCase();
+  let statusClass = 'status-badge--active';
+  if (statusLower === 'pendiente') statusClass = 'status-badge--pending';
+  else if (statusLower === 'guardada') statusClass = 'status-badge--claimed';
 
   return (
     <article className="credential-card">
@@ -30,16 +33,16 @@ function CredentialCard({ title, issuer, issueDate, status = 'Activa', onViewDet
         </p>
       </div>
 
-      <div className="credential-card__footer">   
+      <div className="credential-card__footer">
         <a href="#" className="credential-card__link" onClick={(e) => {
           e.preventDefault();
-          onViewDetails(); 
+          onViewDetails();
         }}>
           Ver Credencial Completa →
-        </a>  
+        </a>
       </div>
     </article>
   );
-};
+}
 
 export default CredentialCard;

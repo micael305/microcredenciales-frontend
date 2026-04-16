@@ -1,42 +1,30 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from "react";
-import {supabase} from '../../supabase/Client.js'
-import './header.css'; 
+import { useAuth } from '../../context/AuthContext';
+import './header.css';
 
 function Header() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const { user, logout } = useAuth();
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  const handleLogout = async () => {
-      await supabase.auth.signOut();
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
     <header className="header">
       <div className="header-container">
-        
-        <div 
-          onClick={() => navigate('/')} 
+
+        <div
+          onClick={() => navigate('/')}
           className="header-logo"
         >
           UTN-FRT MicroCredenciales
         </div>
 
         <nav className="header-nav">
-          <button 
-            onClick={() => navigate('/verificacion')}
+          <button
+            onClick={() => navigate('/verificar')}
             className="nav-link"
           >
             Verificación Pública

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './shareModal.css';
 
 function ShareModal({ credential, onClose }) {
@@ -6,30 +6,31 @@ function ShareModal({ credential, onClose }) {
 
   if (!credential) return null;
 
-  const shareLink = `${window.location.origin}/verificar/${credential.id}`;
+  const hash = credential.fabric_hash || credential.id;
+  const shareLink = `${window.location.origin}/verificar/${hash}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareLink);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000); 
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="share-modal-content" onClick={(e) => e.stopPropagation()}>
-        
+
         <div className="share-modal-header">
-          <h2 className="share-modal-title">Compartir Credenciales</h2>
+          <h2 className="share-modal-title">Compartir Credencial</h2>
           <button className="share-modal-close-icon" onClick={onClose}>&times;</button>
         </div>
 
         <p className="share-modal-text">
-          Se ha generado un enlace y un código QR únicos para que un tercero pueda verificar la credencial que seleccionaste.
+          Se ha generado un enlace único para que un tercero pueda verificar la credencial que seleccionaste.
         </p>
 
         <div className="share-modal-box">
           <p className="share-modal-label">Enlace de Verificación Único:</p>
-          
+
           <div className="share-input-group">
             <input type="text" readOnly value={shareLink} className="share-input" />
             <button className="share-copy-btn" onClick={handleCopy}>
@@ -38,7 +39,7 @@ function ShareModal({ credential, onClose }) {
           </div>
 
           <div className="share-qr-placeholder">
-            Código QR (Simulación)
+            Código QR — Próximamente
           </div>
         </div>
 
