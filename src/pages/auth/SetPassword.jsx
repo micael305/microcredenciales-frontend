@@ -6,6 +6,25 @@ import Header from "../../components/Header/Header.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import "./auth.css";
 
+const RequirementIcon = ({ fulfilled }) => (
+  <svg 
+    width="16" height="16" viewBox="0 0 24 24" 
+    fill={fulfilled ? "#14b8a6" : "none"} 
+    stroke={fulfilled ? "#14b8a6" : "#9ca3af"} 
+    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+    className="req-icon"
+  >
+    {fulfilled ? (
+      <>
+        <circle cx="12" cy="12" r="10" />
+        <path stroke="#ffffff" d="M9 12l2 2 4-4" />
+      </>
+    ) : (
+      <circle cx="12" cy="12" r="10" />
+    )}
+  </svg>
+);
+
 function SetPassword() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -16,6 +35,15 @@ function SetPassword() {
   const navigate = useNavigate();
 
   const isOnboarding = !user?.has_password;
+
+  // Real-time dynamic validations
+  const hasMinLength = password.length >= 8;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const passwordsMatch = password && confirmPassword && password === confirmPassword;
+
+  // Form validity
+  const isFormValid = hasMinLength && hasUppercase && hasNumber && passwordsMatch;
 
   useEffect(() => {
     if (success) {
@@ -28,13 +56,8 @@ function SetPassword() {
     e.preventDefault();
     setError(null);
 
-    if (password.length < 8) {
-      setError("La contraseña debe tener al menos 8 caracteres.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Las contraseñas no coinciden.");
+    if (!isFormValid) {
+      setError("Por favor, asegúrate de cumplir con todos los requisitos de la contraseña.");
       return;
     }
 
@@ -56,8 +79,8 @@ function SetPassword() {
 
       <main className="main-content-centered">
         <div className="auth-card">
-          {!isOnboarding && (
-            <button className="btn-link" onClick={() => navigate('/alumno')}>&lt;   Volver al Dashboard</button>
+          {!isOnboarding && !success && (
+            <button className="btn-link back-link" onClick={() => navigate('/alumno')}>&lt; Volver al Dashboard</button>
           )}
 
           <h2 className="auth-title">
@@ -71,19 +94,19 @@ function SetPassword() {
               </p>
               <p>
                 Para poder acceder al portal directamente en el futuro,
-                configura una contraseña para tu cuenta.
+                configura una contraseña de acceso.
               </p>
             </div>
           )}
 
           {!isOnboarding && !success && (
-            <p className="auth-info">Ya tienes una contraseña configurada. Puedes actualizarla aquí.</p>
+            <p className="auth-info">Ingresa tu nueva contraseña corporativa.</p>
           )}
 
           {success ? (
             <div className="auth-success">
               <p>Contraseña configurada correctamente.</p>
-              <p>Ahora puedes iniciar sesión directamente con tu email y contraseña.</p>
+              <p>Ahora puedes iniciar sesión directamente con tu email y nueva contraseña.</p>
               <button className="btn-primary" onClick={() => navigate('/alumno', { replace: true })}>
                 Ir al Dashboard
               </button>
@@ -92,35 +115,54 @@ function SetPassword() {
             <>
               {error && <p className="auth-error">{error}</p>}
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} noValidate>
                 <div className="form-group">
                   <label className="form-label">Nueva Contraseña</label>
                   <input
                     required
                     type="password"
-                    placeholder="Mínimo 8 caracteres"
+                    placeholder="Introduce tu contraseña"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="form-input"
-                    minLength={8}
                   />
                 </div>
 
-                <div className="form-group">
+                <div className="password-requirements">
+                  <div className={`req-item ${hasMinLength ? 'fulfilled' : ''}`}>
+                    <RequirementIcon fulfilled={hasMinLength} />
+                    <span>Mínimo 8 caracteres</span>
+                  </div>
+                  <div className={`req-item ${hasUppercase ? 'fulfilled' : ''}`}>
+                    <RequirementIcon fulfilled={hasUppercase} />
+                    <span>Al menos 1 mayúscula</span>
+                  </div>
+                  <div className={`req-item ${hasNumber ? 'fulfilled' : ''}`}>
+                    <RequirementIcon fulfilled={hasNumber} />
+                    <span>Al menos 1 número</span>
+                  </div>
+                </div>
+
+                <div className="form-group" style={{ marginTop: '1.5rem' }}>
                   <label className="form-label">Confirmar Contraseña</label>
                   <input
                     required
                     type="password"
-                    placeholder="Repetir contraseña"
+                    placeholder="Repite la contraseña"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className="form-input"
-                    minLength={8}
                   />
+                  {confirmPassword.length > 0 && (
+                    <div className={`req-item match-indicator ${passwordsMatch ? 'fulfilled' : 'error'}`}>
+                      <RequirementIcon fulfilled={passwordsMatch} />
+                      <span>{passwordsMatch ? 'Las contraseñas coinciden' : 'Las contraseñas no coinciden'}</span>
+                    </div>
+                  )}
                 </div>
 
-                <button type="submit" disabled={loading} className="btn-primary">
-                  {loading ? "Guardando..." : (isOnboarding ? "Configurar Contraseña" : "Actualizar Contraseña")}
+                <button type="submit" disabled={loading || !isFormValid} className={`btn-primary ${!isFormValid ? 'btn-disabled' : ''}`}>
+                  {loading ? "Guardando..." : (isOnboarding ? "Guardar Contraseña" : "Actualizar Contraseña")}
                 </button>
               </form>
             </>
