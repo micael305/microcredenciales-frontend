@@ -31,7 +31,10 @@ function MoodleCallback() {
     }
 
     loginWithMoodleToken(token)
-      .then(() => navigate('/alumno', { replace: true }))
+      .then((data) => {
+        const dest = data.student.has_password ? '/alumno' : '/configurar-password';
+        navigate(dest, { replace: true });
+      })
       .catch((err) => setError(err.message || 'Error al autenticar con Moodle'));
   }, []);
 

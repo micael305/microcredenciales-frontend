@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import * as api from "../../api/client";
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,15 @@ function SetPassword() {
   const [loading, setLoading] = useState(false);
   const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
+
+  const isOnboarding = !user?.has_password;
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => navigate('/alumno', { replace: true }), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,10 +56,27 @@ function SetPassword() {
 
       <main className="main-content-centered">
         <div className="auth-card">
-          <button className="btn-link" onClick={() => navigate('/alumno')}>&lt;   Volver al Dashboard</button>
-          <h2 className="auth-title">Configurar Contraseña</h2>
+          {!isOnboarding && (
+            <button className="btn-link" onClick={() => navigate('/alumno')}>&lt;   Volver al Dashboard</button>
+          )}
 
-          {user?.has_password && !success && (
+          <h2 className="auth-title">
+            {isOnboarding ? 'Configurar Contraseña' : 'Actualizar Contraseña'}
+          </h2>
+
+          {isOnboarding && !success && (
+            <div className="auth-info" style={{ marginBottom: '1.5rem' }}>
+              <p style={{ fontWeight: 600, marginBottom: '0.5rem', color: '#003366' }}>
+                Bienvenido al Portal de Credenciales
+              </p>
+              <p>
+                Para poder acceder al portal directamente en el futuro,
+                configura una contraseña para tu cuenta.
+              </p>
+            </div>
+          )}
+
+          {!isOnboarding && !success && (
             <p className="auth-info">Ya tienes una contraseña configurada. Puedes actualizarla aquí.</p>
           )}
 
@@ -58,8 +84,8 @@ function SetPassword() {
             <div className="auth-success">
               <p>Contraseña configurada correctamente.</p>
               <p>Ahora puedes iniciar sesión directamente con tu email y contraseña.</p>
-              <button className="btn-primary" onClick={() => navigate('/alumno')}>
-                Volver al Dashboard
+              <button className="btn-primary" onClick={() => navigate('/alumno', { replace: true })}>
+                Ir al Dashboard
               </button>
             </div>
           ) : (
@@ -94,7 +120,7 @@ function SetPassword() {
                 </div>
 
                 <button type="submit" disabled={loading} className="btn-primary">
-                  {loading ? "Guardando..." : "Configurar Contraseña"}
+                  {loading ? "Guardando..." : (isOnboarding ? "Configurar Contraseña" : "Actualizar Contraseña")}
                 </button>
               </form>
             </>
