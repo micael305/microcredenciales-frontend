@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './shareModal.css';
+import './ShareModal.css';
 
 function ShareModal({ credential, onClose }) {
   const [copied, setCopied] = useState(false);

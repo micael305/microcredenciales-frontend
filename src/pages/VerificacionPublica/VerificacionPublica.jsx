@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import * as api from '../../api/client';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import './verificacionPublica.css';
+import './VerificacionPublica.css';
 
 function formatDate(isoString) {
   if (!isoString) return "—";

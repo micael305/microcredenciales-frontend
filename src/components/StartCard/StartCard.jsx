@@ -1,4 +1,4 @@
-import "./startcard.css";
+import "./startCard.css";
 function StartCard({ number, label, color }) {
   const numberClassName = color === 'orange' ? 'start-card__number start-card__number--orange' : 'start-card__number';
 
