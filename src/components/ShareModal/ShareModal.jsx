@@ -6,7 +6,7 @@ function ShareModal({ credential, onClose }) {
 
   if (!credential) return null;
 
-  const hash = credential.fabric_hash || credential.id;
+  const hash = credential.credential_hash || credential.id;
   const shareLink = `${window.location.origin}/verificar/${hash}`;
 
   const handleCopy = () => {
