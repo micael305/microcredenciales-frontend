@@ -14,10 +14,10 @@ export const BLOCKCHAIN_STATUS = Object.freeze({
 });
 
 const STATUS_LABELS = {
-  [BLOCKCHAIN_STATUS.ANCHORED]: 'Anclada en el ledger',
+  [BLOCKCHAIN_STATUS.ANCHORED]: 'Verificada en Blockchain',
   [BLOCKCHAIN_STATUS.PENDING_ANCHORING]: 'Pendiente de anclaje',
   [BLOCKCHAIN_STATUS.REVOKED]: 'Revocada',
-  [BLOCKCHAIN_STATUS.UNAVAILABLE]: 'Ledger no disponible',
+  [BLOCKCHAIN_STATUS.UNAVAILABLE]: 'Blockchain no disponible',
 };
 
 const STATUS_VARIANTS = {
@@ -29,13 +29,13 @@ const STATUS_VARIANTS = {
 
 const STATUS_DESCRIPTIONS = {
   [BLOCKCHAIN_STATUS.ANCHORED]:
-    'La credencial tiene una transacción registrada en el ledger Indy verificable públicamente.',
+    'La credencial tiene un registro inmutable en la blockchain Hyperledger Besu, verificable públicamente a través del explorador de bloques.',
   [BLOCKCHAIN_STATUS.PENDING_ANCHORING]:
-    'La credencial existe en el registro institucional. El anclaje on-ledger se ejecuta como parte de la cadena de emisión.',
+    'La credencial existe en el registro institucional. El anclaje en la blockchain se ejecuta como parte de la cadena de emisión.',
   [BLOCKCHAIN_STATUS.REVOKED]:
-    'La credencial fue revocada por la institución emisora.',
+    'La credencial fue revocada por la institución emisora. El registro de revocación es inmutable en la blockchain.',
   [BLOCKCHAIN_STATUS.UNAVAILABLE]:
-    'El ledger no respondió a la consulta. Reintentá en unos segundos.',
+    'La blockchain no respondió a la consulta. Reintentá en unos segundos.',
 };
 
 export function getBlockchainStatusLabel(status) {

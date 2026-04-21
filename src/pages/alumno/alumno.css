@@ -1,52 +1,72 @@
-/* ------------------ Dashboard ------------------------- */
+/* ── Dashboard Layout ── */
 .dashboard-container {
-    width: 100%;
-    padding: 20px; 
-    max-width: 1400px; 
-    margin: 0 auto; 
-    box-sizing: border-box;
+  width: 100%;
+  padding: 24px;
+  max-width: 80rem;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .dashboard-header {
-    color: var(--color-text-main);
-    font-size: 1rem;
-    margin-top: 50px;
-    text-align: left ;
-    max-width: 70rem;
+  margin-top: 5rem; /* below fixed header */
+  margin-bottom: 24px;
 }
 
+.dashboard-header h1 {
+  font: var(--md-sys-typescale-headline-medium);
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 4px;
+}
+
+.dashboard-header h3 {
+  font: var(--md-sys-typescale-body-large);
+  color: var(--md-sys-color-on-surface-variant);
+  font-weight: 400;
+  margin: 0;
+}
+
+.header-divider {
+  border: none;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  margin: 16px 0 0 0;
+}
+
+/* Stats Row */
 .starcard-container {
-    display: flex;       
-    gap: 20px;           
-    margin-top: 20px;  
-    flex-wrap: wrap;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
+/* Credentials Section */
 .credentialcard-title {
-   color: var(--color-text-main);
-    font-size: 1.25rem;
-    margin-top: 50px;
-    text-align: left;
+  font: var(--md-sys-typescale-title-large);
+  color: var(--md-sys-color-on-surface);
+  margin-top: 32px;
+  margin-bottom: 16px;
 }
 
 .credentialcard-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin: 20px 0 20px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
+/* State Messages */
 .dashboard-loading,
 .dashboard-error,
 .dashboard-empty {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 3rem 1rem;
-    color: var(--color-text-body);
-    font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+  font: var(--md-sys-typescale-body-large);
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 .dashboard-error {
-    color: #991b1b;
+  color: var(--md-sys-color-error);
 }

@@ -1,9 +1,26 @@
 import './footer.css';
+
 function Footer() {
+  const explorerUrl = import.meta.env.VITE_EXPLORER_URL || '';
+
   return (
     <footer className="footer">
-        Portal de Gestión de Microcredenciales | UTN-FRT | Tecnología Blockchain
-      </footer>
+      <div className="footer-container">
+        <span className="footer-text">
+          Portal de Microcredenciales · UTN Facultad Regional Tucumán
+        </span>
+        {explorerUrl && (
+          <a
+            href={explorerUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-link"
+          >
+            Blockchain Explorer ↗
+          </a>
+        )}
+      </div>
+    </footer>
   );
 }
 

@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../context/AuthContext";
 import * as api from "../../api/client";
-// Componentes
+// Components
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import StartCard from "../../components/StartCard/StartCard";
 import CredentialCard from "../../components/CredentialCard/CredentialCard";
-// Modales
+// Modals
 import CredentialModal from "../../components/CredentialModal/CredentialModal";
 import ShareModal from "../../components/ShareModal/ShareModal";
-// Estilos
+// Styles
 import "./alumno.css";
 
 const STATUS_LABELS = {
@@ -59,14 +59,39 @@ function Dashboard() {
   const handleViewDetails = async (cred) => {
     setLoadingDetail(true);
     try {
-      const detail = await api.getCredentialDetail(cred.id);
+      // Fetch with blockchain verification data
+      const detail = await api.verifyCredential(cred.id);
       setSelectedCredential(detail);
     } catch {
-      setSelectedCredential(cred);
+      // Fallback to basic detail if verify fails
+      try {
+        const detail = await api.getCredentialDetail(cred.id);
+        setSelectedCredential(detail);
+      } catch {
+        setSelectedCredential(cred);
+      }
     } finally {
       setLoadingDetail(false);
     }
   };
+
+  const handleToggleVisibility = useCallback(async (cred) => {
+    const newValue = !cred.is_public;
+    try {
+      await api.toggleVisibility(cred.credential_hash, newValue);
+      // Update local state
+      setSelectedCredential((prev) =>
+        prev ? { ...prev, is_public: newValue } : prev
+      );
+      setCredentials((prev) =>
+        prev.map((c) =>
+          c.id === cred.id ? { ...c, is_public: newValue } : c
+        )
+      );
+    } catch (err) {
+      console.error("Error toggling visibility:", err);
+    }
+  }, []);
 
   const emitted = stats ? stats.issued + stats.claimed : 0;
   const pending = stats ? stats.pending : 0;
@@ -123,13 +148,16 @@ function Dashboard() {
 
       {loadingDetail && (
         <div className="modal-overlay">
-          <p style={{ color: '#fff', fontSize: '1.1rem' }}>Cargando detalle...</p>
+          <p style={{ color: 'var(--md-sys-color-inverse-on-surface)', font: 'var(--md-sys-typescale-body-large)' }}>
+            Cargando detalle...
+          </p>
         </div>
       )}
 
       <CredentialModal
         credential={selectedCredential}
         onClose={() => setSelectedCredential(null)}
+        onToggleVisibility={handleToggleVisibility}
       />
       <ShareModal
         credential={credentialToShare}

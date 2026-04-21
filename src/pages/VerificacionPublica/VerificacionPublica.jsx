@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { MdOpenInNew } from 'react-icons/md';
 import * as api from '../../api/client';
 import {
   getBlockchainStatusLabel,
+  getBlockchainStatusVariant,
   getBlockchainStatusDescription,
 } from '../../utils/blockchain';
 import Header from '../../components/Header/Header';
@@ -55,6 +57,7 @@ function VerificacionPublica() {
   };
 
   const blockchain = result?.blockchain;
+  const blockchainVariant = blockchain ? getBlockchainStatusVariant(blockchain.status) : null;
 
   return (
     <div className="verificacion-page">
@@ -63,25 +66,27 @@ function VerificacionPublica() {
       <div className="verificacion-container">
         <div
           className="verificacion-card"
-          style={{ marginBottom: hash ? '1.5rem' : '0' }}
+          style={{ marginBottom: hash ? '0' : '0' }}
         >
           <h2 className="verificacion-title">Verificación Pública de Credenciales</h2>
           <p className="verificacion-text">
             Ingresá el hash de una credencial para consultar su estado en el
-            registro institucional y en el ledger público.
+            registro institucional y en la blockchain.
           </p>
-          <form onSubmit={handleSearch} className="verificacion-search-form">
+          <form onSubmit={handleSearch} className="verificacion-search-form" id="verification-form">
             <input
               type="text"
               placeholder="Pegar hash de la credencial..."
               value={searchHash}
               onChange={(e) => setSearchHash(e.target.value)}
               className="verificacion-search-input"
+              id="verification-hash-input"
             />
             <button
               type="submit"
               className="verificacion-search-btn"
               disabled={loading}
+              id="verification-submit-btn"
             >
               {loading ? 'Validando...' : 'Verificar'}
             </button>
@@ -96,7 +101,7 @@ function VerificacionPublica() {
 
         {error && (
           <div className="verificacion-card">
-            <div className="verificacion-icon verificacion-icon--error">&#10060;</div>
+            <div className="verificacion-icon verificacion-icon--error">✕</div>
             <p className="verificacion-text">{error}</p>
           </div>
         )}
@@ -105,8 +110,8 @@ function VerificacionPublica() {
           <div className="verificacion-card">
             {result.valid ? (
               <>
-                <div className="verificacion-icon">&#9989;</div>
-                <h2 className="verificacion-title">Credencial reconocida</h2>
+                <div className="verificacion-icon">✓</div>
+                <h2 className="verificacion-title">Credencial Reconocida</h2>
                 <p className="verificacion-text">
                   Los datos coinciden con una emisión registrada por la institución.
                 </p>
@@ -114,19 +119,19 @@ function VerificacionPublica() {
                 <div className="verificacion-details">
                   {result.student_name && (
                     <div className="verificacion-data">
-                      <span className="verificacion-label">Alumno:</span>
+                      <span className="verificacion-label">Alumno</span>
                       <span className="verificacion-value">{result.student_name}</span>
                     </div>
                   )}
                   {result.course_name && (
                     <div className="verificacion-data">
-                      <span className="verificacion-label">Curso:</span>
+                      <span className="verificacion-label">Curso</span>
                       <span className="verificacion-value">{result.course_name}</span>
                     </div>
                   )}
                   {result.completion_date && (
                     <div className="verificacion-data">
-                      <span className="verificacion-label">Fecha de Emisión:</span>
+                      <span className="verificacion-label">Fecha de Emisión</span>
                       <span className="verificacion-value">
                         {formatDate(result.completion_date)}
                       </span>
@@ -134,7 +139,7 @@ function VerificacionPublica() {
                   )}
                   {result.issuer && (
                     <div className="verificacion-data">
-                      <span className="verificacion-label">Emisor:</span>
+                      <span className="verificacion-label">Institución Emisora</span>
                       <span className="verificacion-value">{result.issuer}</span>
                     </div>
                   )}
@@ -142,18 +147,18 @@ function VerificacionPublica() {
                   {blockchain && (
                     <>
                       <div className="verificacion-data">
-                        <span className="verificacion-label">Red:</span>
+                        <span className="verificacion-label">Red Blockchain</span>
                         <span className="verificacion-value">{blockchain.network}</span>
                       </div>
                       <div className="verificacion-data">
-                        <span className="verificacion-label">Estado on-ledger:</span>
-                        <span className="verificacion-value">
+                        <span className="verificacion-label">Estado on-chain</span>
+                        <span className={`verificacion-status-badge verificacion-status-badge--${blockchainVariant}`}>
                           {getBlockchainStatusLabel(blockchain.status)}
                         </span>
                       </div>
                       {blockchain.issuer_did && (
                         <div className="verificacion-data">
-                          <span className="verificacion-label">DID emisor:</span>
+                          <span className="verificacion-label">DID del Emisor</span>
                           <span className="verificacion-value verificacion-hash">
                             {blockchain.issuer_did}
                           </span>
@@ -161,40 +166,35 @@ function VerificacionPublica() {
                       )}
                       {blockchain.txn_id && (
                         <div className="verificacion-data">
-                          <span className="verificacion-label">Tx ID:</span>
+                          <span className="verificacion-label">Transaction ID</span>
                           <span className="verificacion-value verificacion-hash">
                             {blockchain.txn_id}
                           </span>
                         </div>
                       )}
                       {blockchain.explorer_url && (
-                        <div className="verificacion-data">
-                          <span className="verificacion-label">Explorer:</span>
-                          <a
-                            className="verificacion-value"
-                            href={blockchain.explorer_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {blockchain.explorer_url}
-                          </a>
-                        </div>
+                        <a
+                          href={blockchain.explorer_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="verificacion-explorer-link"
+                        >
+                          <MdOpenInNew />
+                          Ver en Blockchain Explorer
+                        </a>
                       )}
                     </>
                   )}
                 </div>
 
                 {blockchain && (
-                  <p
-                    className="verificacion-text"
-                    style={{ marginTop: '1rem', fontSize: '0.9rem', opacity: 0.85 }}
-                  >
+                  <p className="verificacion-description">
                     {getBlockchainStatusDescription(blockchain.status)}
                   </p>
                 )}
 
-                <div className="verificacion-data" style={{ marginTop: '1rem' }}>
-                  <span className="verificacion-label">Hash:</span>
+                <div className="verificacion-data" style={{ marginTop: '16px' }}>
+                  <span className="verificacion-label">Hash de la Credencial</span>
                   <span className="verificacion-value verificacion-hash">
                     {result.credential_hash}
                   </span>
@@ -202,14 +202,14 @@ function VerificacionPublica() {
               </>
             ) : (
               <>
-                <div className="verificacion-icon verificacion-icon--error">&#10060;</div>
-                <h2 className="verificacion-title">Credencial no encontrada</h2>
+                <div className="verificacion-icon verificacion-icon--error">✕</div>
+                <h2 className="verificacion-title">Credencial No Encontrada</h2>
                 <p className="verificacion-text">
                   No se encontró ninguna credencial que corresponda al hash proporcionado.
                   Verificá que el hash sea correcto.
                 </p>
                 <div className="verificacion-data">
-                  <span className="verificacion-label">Hash consultado:</span>
+                  <span className="verificacion-label">Hash Consultado</span>
                   <span className="verificacion-value verificacion-hash">
                     {result.credential_hash}
                   </span>

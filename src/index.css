@@ -1,48 +1,149 @@
+/* =================================================================
+ * Material Design 3 — Design Tokens (Light Theme)
+ * =================================================================
+ * Seed color: #003366 (institutional blue UTN-FRT)
+ * Generated following MD3 color system role structure.
+ * Reference: https://m3.material.io/styles/color/roles
+ * ================================================================= */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* ── Primary ── */
+  --md-sys-color-primary: #00537D;
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-primary-container: #C4E7FF;
+  --md-sys-color-on-primary-container: #001E2E;
 
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #f3f4f6; 
+  /* ── Secondary ── */
+  --md-sys-color-secondary: #4E616D;
+  --md-sys-color-on-secondary: #FFFFFF;
+  --md-sys-color-secondary-container: #D1E5F4;
+  --md-sys-color-on-secondary-container: #0A1E28;
 
-  /* Paleta de Colores Global */
-  --color-text-main: #102A43;
-  --color-blue-dark: #003366; 
-  --color-text-body: #627D98; 
-  --color-text-secondary: #627D98; 
-  --color-badge-active-bg: #D1F4EA; 
-  --color-badge-active-text: #088761; 
-  --color-link-teal: #1AC7B8; 
-  --color-accent-orange: #FF8F1F; 
-  --color-card-bg: #FFFFFF;
-  --color-shadow: rgba(0, 0, 0, 0.04); 
-  --color-modal-item: #F8FAFC;
-  --color-hash-box: #ebf0f7;
+  /* ── Tertiary (verification / success states) ── */
+  --md-sys-color-tertiary: #006B5E;
+  --md-sys-color-on-tertiary: #FFFFFF;
+  --md-sys-color-tertiary-container: #72F8E0;
+  --md-sys-color-on-tertiary-container: #00201B;
+
+  /* ── Error ── */
+  --md-sys-color-error: #BA1A1A;
+  --md-sys-color-on-error: #FFFFFF;
+  --md-sys-color-error-container: #FFDAD6;
+  --md-sys-color-on-error-container: #410002;
+
+  /* ── Surface / Background ── */
+  --md-sys-color-surface: #F6FAFE;
+  --md-sys-color-on-surface: #181C20;
+  --md-sys-color-on-surface-variant: #42474E;
+  --md-sys-color-surface-container-lowest: #FFFFFF;
+  --md-sys-color-surface-container-low: #F0F4F8;
+  --md-sys-color-surface-container: #EBF0F4;
+  --md-sys-color-surface-container-high: #E5EAEE;
+  --md-sys-color-surface-container-highest: #DFE4E8;
+
+  /* ── Outline ── */
+  --md-sys-color-outline: #72787E;
+  --md-sys-color-outline-variant: #C2C7CE;
+
+  /* ── Inverse ── */
+  --md-sys-color-inverse-surface: #2D3135;
+  --md-sys-color-inverse-on-surface: #EEF1F6;
+  --md-sys-color-inverse-primary: #83CFFF;
+
+  /* ── Scrim ── */
+  --md-sys-color-scrim: rgba(0, 0, 0, 0.32);
+
+  /* ── Warning (custom, not in spec — needed for pending states) ── */
+  --md-custom-color-warning: #7D5700;
+  --md-custom-color-on-warning: #FFFFFF;
+  --md-custom-color-warning-container: #FFDEAE;
+  --md-custom-color-on-warning-container: #281800;
+
+  /* =================================================================
+   * Typography (MD3 Type Scale)
+   * Font: Roboto — the official Material Design typeface
+   * ================================================================= */
+  --md-sys-typescale-display-large: 700 2.25rem/2.75rem 'Roboto', sans-serif;
+  --md-sys-typescale-headline-large: 600 2rem/2.5rem 'Roboto', sans-serif;
+  --md-sys-typescale-headline-medium: 500 1.75rem/2.25rem 'Roboto', sans-serif;
+  --md-sys-typescale-title-large: 500 1.375rem/1.75rem 'Roboto', sans-serif;
+  --md-sys-typescale-title-medium: 500 1rem/1.5rem 'Roboto', sans-serif;
+  --md-sys-typescale-title-small: 500 0.875rem/1.25rem 'Roboto', sans-serif;
+  --md-sys-typescale-body-large: 400 1rem/1.5rem 'Roboto', sans-serif;
+  --md-sys-typescale-body-medium: 400 0.875rem/1.25rem 'Roboto', sans-serif;
+  --md-sys-typescale-body-small: 400 0.75rem/1rem 'Roboto', sans-serif;
+  --md-sys-typescale-label-large: 500 0.875rem/1.25rem 'Roboto', sans-serif;
+  --md-sys-typescale-label-medium: 500 0.75rem/1rem 'Roboto', sans-serif;
+  --md-sys-typescale-label-small: 500 0.6875rem/0.875rem 'Roboto', sans-serif;
+
+  /* =================================================================
+   * Shape (MD3 Corner Radii)
+   * ================================================================= */
+  --md-sys-shape-corner-none: 0;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-full: 9999px;
+
+  /* =================================================================
+   * Motion (MD3 Easing & Duration)
+   * ================================================================= */
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-duration-short: 150ms;
+  --md-sys-motion-duration-medium: 250ms;
+  --md-sys-motion-duration-long: 400ms;
 }
 
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* =================================================================
+ * Global Reset & Defaults
+ * ================================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  font: var(--md-sys-typescale-body-large);
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  color: var(--md-sys-color-on-surface);
 }
 
+a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* =================================================================
+ * Utility: Modal Overlay (shared by CredentialModal & ShareModal)
+ * ================================================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--md-sys-color-scrim);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 24px;
+}

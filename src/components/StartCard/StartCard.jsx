@@ -1,11 +1,14 @@
 import "./startCard.css";
+
 function StartCard({ number, label, color }) {
-  const numberClassName = color === 'orange' ? 'start-card__number start-card__number--orange' : 'start-card__number';
+  const variantClass = color === 'orange'
+    ? 'stat-card--warning'
+    : 'stat-card--primary';
 
   return (
-    <div className="start-card">
-      <div className={numberClassName}>{number}</div>
-      <div className="start-card__label">{label}</div>
+    <div className={`stat-card ${variantClass}`}>
+      <div className="stat-card__number">{number}</div>
+      <div className="stat-card__label">{label}</div>
     </div>
   );
 }

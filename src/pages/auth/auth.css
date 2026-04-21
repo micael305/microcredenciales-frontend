@@ -1,12 +1,11 @@
-/* src/pages/auth.css */
+/* ── Auth Pages (Login, SetPassword, Home) ── */
 
-/* --- Contenedores Generales --- */
+/* --- Page Layout --- */
 .page-container {
-  min-height: 90vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f3f4f6; 
-  font-family: 'Inter', sans-serif;
+  background-color: var(--md-sys-color-surface);
 }
 
 .main-content-centered {
@@ -14,131 +13,130 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 24px;
 }
 
-/* --- Tarjetas (Login / SignUp) --- */
+/* --- Auth Card --- */
 .auth-card {
-  background-color: white;
+  background-color: var(--md-sys-color-surface-container-lowest);
   width: 100%;
   max-width: 400px;
-  padding: 2.5rem; 
-  border-radius: 0.75rem; 
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
-  border: 1px solid #e5e7eb; 
+  padding: 2.5rem;
+  border-radius: var(--md-sys-shape-corner-large);
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .auth-title {
-  font-size: 1.875rem; 
-  font-weight: 700; 
-  color: #003366;   
+  font: var(--md-sys-typescale-headline-medium);
+  color: var(--md-sys-color-primary);
   text-align: center;
-  margin: 0; 
+  margin: 0 0 1.5rem 0;
 }
 
-/* --- Formularios e Inputs --- */
+/* --- Forms --- */
 .form-group {
-  margin-bottom: 1.5rem; 
+  margin-bottom: 1.5rem;
 }
 
 .form-label {
   display: flex;
-  color: #4b5563; 
-  font-weight: 400;
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-on-surface-variant);
   margin-bottom: 0.5rem;
-  margin-left: 0.5rem;
-  font-size: 1rem;
+  margin-left: 0.25rem;
   justify-content: flex-start;
 }
 
 .form-input {
-  width: 90%;
-  border: 1px solid #d1d5db; 
-  border-radius: 0.5rem; 
-  padding: 0.75rem 1rem; 
-  color: #374151; 
-  background-color: #ffffff;
-  font-size: 1rem;
-  transition: all 0.2s;
+  width: 100%;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-small);
+  padding: 0.75rem 1rem;
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-surface-container-lowest);
+  font: var(--md-sys-typescale-body-large);
+  transition: border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
   outline: none;
 }
 
 .form-input:focus {
-  border-color: transparent;
-  box-shadow: 0 0 0 2px #14b8a6; 
+  border-color: var(--md-sys-color-primary);
+  border-width: 2px;
+  padding: calc(0.75rem - 1px) calc(1rem - 1px);
 }
 
-/* --- Botones --- */
+/* --- Buttons --- */
 .btn-primary {
   width: 100%;
-  background-color: #14b8a6; 
-  color: white;
-  font-weight: 700;
-  padding: 0.75rem; 
-  border-radius: 0.5rem; 
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  font: var(--md-sys-typescale-label-large);
+  padding: 0.75rem;
+  border-radius: var(--md-sys-shape-corner-small);
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s;
   margin-top: 0.5rem;
+  transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .btn-primary:hover {
-  background-color: #0d9488; 
+  opacity: 0.88;
 }
 
 .btn-primary:disabled {
-  background-color: #9ca3af;
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface-variant);
   cursor: not-allowed;
+  opacity: 1;
 }
 
 .btn-secondary {
   width: 100%;
-  background-color: #003366;
-  color: white;
-  font-weight: 700;
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  font: var(--md-sys-typescale-label-large);
   padding: 0.75rem;
-  border-radius: 0.5rem;
+  border-radius: var(--md-sys-shape-corner-small);
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s;
+  transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .btn-secondary:hover {
-  background-color: #1e40af;
+  opacity: 0.88;
 }
 
 .btn-link {
   display: block;
   width: 100%;
-  text-align: center;
-  margin-top: 1.5rem;
-  font-size: 0.875rem;
-  color: #6b7280; 
+  text-align: left;
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-primary);
   background: none;
   border: none;
   cursor: pointer;
-  transition: color 0.2s;
+  padding: 0;
+  margin-bottom: 1rem;
 }
 
 .btn-link:hover {
-  color: #003366;
+  text-decoration: underline;
 }
 
-/* --- Textos de Ayuda --- */
+/* --- Helper Text --- */
 .text-helper {
   margin-top: 1.5rem;
   text-align: center;
-  font-size: 0.875rem;
-  color: #6b7280;
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface-variant);
   line-height: 1.625;
 }
 
 .auth-footer {
   margin-top: 1.5rem;
   text-align: center;
-  font-size: 0.875rem;
-  color: #6b7280;
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface-variant);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -149,8 +147,7 @@
   display: inline;
   width: auto;
   margin: 0;
-  color: #14b8a6;
-  font-weight: 600;
+  color: var(--md-sys-color-primary);
   text-align: left;
 }
 
@@ -158,7 +155,7 @@
   text-decoration: underline;
 }
 
-/* --- Estilos específicos de HOME --- */
+/* --- Home Hero --- */
 .home-hero {
   flex-grow: 1;
   display: flex;
@@ -170,15 +167,14 @@
 }
 
 .home-title {
-  font-size: 2.25rem; 
-  font-weight: 800;
-  color: #003366;
+  font: var(--md-sys-typescale-display-large);
+  color: var(--md-sys-color-primary);
   margin-bottom: 1rem;
 }
 
 .home-subtitle {
-  font-size: 1.125rem;
-  color: #4b5563;
+  font: var(--md-sys-typescale-body-large);
+  color: var(--md-sys-color-on-surface-variant);
   margin-bottom: 2rem;
   max-width: 42rem;
 }
@@ -188,77 +184,65 @@
   gap: 1rem;
 }
 
-.btn-link {
-  text-align: left;
-  color: #6b7280;
-  font-size: 0.875rem;
-  margin-top: auto; 
-  padding: 0;
-}
-
 .btn-hero-primary {
-  background-color: #003366;
-  color: white;
-  font-weight: 700;
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  font: var(--md-sys-typescale-label-large);
   padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: var(--md-sys-shape-corner-small);
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s;
+  transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .btn-hero-primary:hover {
-  background-color: #1e40af;
+  opacity: 0.88;
 }
 
 .btn-hero-outline {
-  background-color: white;
-  color: #003366;
-  font-weight: 700;
+  background-color: transparent;
+  color: var(--md-sys-color-primary);
+  font: var(--md-sys-typescale-label-large);
   padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  border: 1px solid #003366;
+  border-radius: var(--md-sys-shape-corner-small);
+  border: 1px solid var(--md-sys-color-outline);
   cursor: pointer;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .btn-hero-outline:hover {
-  background-color: #f9fafb;
+  background-color: var(--md-sys-color-surface-container-low);
 }
 
-/* --- Mensajes de estado --- */
+/* --- Status Messages --- */
 .auth-error {
-  background-color: #fef2f2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
-  border-radius: 0.5rem;
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+  border-radius: var(--md-sys-shape-corner-small);
   padding: 0.75rem 1rem;
-  font-size: 0.875rem;
+  font: var(--md-sys-typescale-body-medium);
   margin-bottom: 1rem;
   text-align: center;
 }
 
 .auth-info {
-  color: var(--color-text-body, #627D98);
-  font-size: 0.875rem;
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface-variant);
   margin-bottom: 1rem;
   text-align: center;
 }
 
 .auth-success {
   text-align: center;
-  color: #065f46;
-  background-color: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  border-radius: 0.5rem;
+  color: var(--md-sys-color-on-tertiary-container);
+  background-color: var(--md-sys-color-tertiary-container);
+  border-radius: var(--md-sys-shape-corner-small);
   padding: 1.5rem;
 }
 
 .auth-success p {
   margin: 0 0 0.75rem;
-  font-size: 0.95rem;
+  font: var(--md-sys-typescale-body-large);
 }
 
 .auth-success .btn-primary {
@@ -266,51 +250,49 @@
 }
 
 .home-moodle-info {
-  color: #6b7280;
-  font-size: 0.9rem;
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface-variant);
   margin-top: 1.5rem;
   max-width: 32rem;
   text-align: center;
 }
 
-/* --- Validadores de Contraseña (MD3) --- */
+/* --- Password Requirements --- */
 .password-requirements {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   margin-top: 0.75rem;
-  background-color: #f9fafb;
+  background-color: var(--md-sys-color-surface-container-low);
   padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
+  border-radius: var(--md-sys-shape-corner-small);
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .req-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.85rem;
-  color: #6b7280;
-  font-weight: 500;
-  transition: color 0.3s ease;
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+  transition: color var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-standard);
 }
 
 .req-item.fulfilled {
-  color: #0d9488;
+  color: var(--md-sys-color-tertiary);
 }
 
 .req-item.error {
-  color: #991b1b;
+  color: var(--md-sys-color-error);
 }
 
 .req-icon {
   flex-shrink: 0;
-  transition: all 0.3s ease;
 }
 
 .match-indicator {
   margin-top: 0.5rem;
-  margin-left: 0.5rem;
+  margin-left: 0.25rem;
 }
 
 .back-link {
@@ -320,8 +302,8 @@
 }
 
 .btn-disabled {
-  opacity: 0.6;
+  opacity: 0.38;
   cursor: not-allowed !important;
-  background-color: #9ca3af !important;
-  box-shadow: none !important;
+  background-color: var(--md-sys-color-surface-container-highest) !important;
+  color: var(--md-sys-color-on-surface-variant) !important;
 }

@@ -1,11 +1,11 @@
+/* ── MD3 Share Dialog ── */
 .share-modal-content {
-  background-color: var(--color-card-bg);
-  border-radius: 12px;
-  padding: 30px;
-  max-width: 500px;
+  background-color: var(--md-sys-color-surface-container-lowest);
+  border-radius: var(--md-sys-shape-corner-extra-large);
+  padding: 28px;
+  max-width: 480px;
   width: 100%;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  animation: modalFadeIn 0.3s ease;
+  animation: modalFadeIn var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-emphasized);
   text-align: left;
 }
 
@@ -13,13 +13,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 .share-modal-title {
-  color: var(--color-link-teal);
-  font-size: 1.8rem;
-  font-weight: 700;
+  font: var(--md-sys-typescale-headline-medium);
+  color: var(--md-sys-color-primary);
   margin: 0;
 }
 
@@ -27,92 +26,105 @@
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #94a3b8;
+  color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
-  padding: 0;
+  padding: 4px;
+  border-radius: var(--md-sys-shape-corner-full);
   line-height: 1;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .share-modal-close-icon:hover {
-  color: #475569;
+  background-color: var(--md-sys-color-surface-container-high);
 }
 
 .share-modal-text {
-  color: var(--color-text-main);
-  font-size: 1rem;
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface-variant);
   margin-bottom: 20px;
   line-height: 1.5;
 }
 
 .share-modal-box {
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
   padding: 20px;
   margin-bottom: 20px;
 }
 
 .share-modal-label {
-  font-weight: 700;
-  color: var(--color-text-main);
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-on-surface);
   margin: 0 0 10px 0;
 }
 
 .share-input-group {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 20px;
 }
 
 .share-input {
   flex-grow: 1;
-  padding: 10px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  color: #475569;
-  background-color: #f8fafc;
+  padding: 10px 12px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-small);
+  font: var(--md-sys-typescale-body-small);
+  font-family: 'Roboto Mono', monospace;
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-surface-container-low);
   outline: none;
 }
 
+.share-input:focus {
+  border-color: var(--md-sys-color-primary);
+}
+
 .share-copy-btn {
-  background-color: var(--color-blue-dark);
-  color: white;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
   border: none;
-  border-radius: 6px;
-  padding: 0 20px;
-  font-weight: 600;
+  border-radius: var(--md-sys-shape-corner-small);
+  padding: 0 16px;
+  font: var(--md-sys-typescale-label-large);
   cursor: pointer;
-  transition: background-color 0.2s;
+  white-space: nowrap;
+  transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .share-copy-btn:hover {
-  background-color: #002244;
+  opacity: 0.88;
 }
 
-.share-qr-placeholder {
-  background-color: #e2e8f0;
-  color: #64748b;
-  height: 180px;
-  border-radius: 6px;
+.share-qr-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  font-weight: 500;
+  padding: 16px;
+  background-color: #FFFFFF;
+  border-radius: var(--md-sys-shape-corner-small);
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .share-close-btn {
   width: 100%;
-  background-color: #e2e8f0;
-  color: #0f172a;
-  border: none;
-  border-radius: 8px;
+  background: none;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface);
+  border-radius: var(--md-sys-shape-corner-small);
   padding: 12px;
-  font-size: 1rem;
-  font-weight: 700;
+  font: var(--md-sys-typescale-label-large);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .share-close-btn:hover {
-  background-color: #cbd5e1;
+  background-color: var(--md-sys-color-surface-container-low);
 }

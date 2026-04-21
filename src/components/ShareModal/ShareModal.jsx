@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
+import { MdContentCopy } from 'react-icons/md';
 import './ShareModal.css';
 
 function ShareModal({ credential, onClose }) {
@@ -21,32 +23,41 @@ function ShareModal({ credential, onClose }) {
 
         <div className="share-modal-header">
           <h2 className="share-modal-title">Compartir Credencial</h2>
-          <button className="share-modal-close-icon" onClick={onClose}>&times;</button>
+          <button className="share-modal-close-icon" onClick={onClose} aria-label="Cerrar">
+            ×
+          </button>
         </div>
 
         <p className="share-modal-text">
-          Se ha generado un enlace único para que un tercero pueda verificar la credencial que seleccionaste.
+          Cualquier persona con este enlace podrá verificar la autenticidad de tu credencial
+          en el registro institucional y en la blockchain.
         </p>
 
         <div className="share-modal-box">
-          <p className="share-modal-label">Enlace de Verificación Único:</p>
-
+          <p className="share-modal-label">Enlace de Verificación:</p>
           <div className="share-input-group">
             <input type="text" readOnly value={shareLink} className="share-input" />
             <button className="share-copy-btn" onClick={handleCopy}>
+              <MdContentCopy />
               {copied ? '¡Copiado!' : 'Copiar'}
             </button>
           </div>
 
-          <div className="share-qr-placeholder">
-            Código QR — Próximamente
+          <div className="share-qr-container">
+            <QRCodeSVG
+              value={shareLink}
+              size={180}
+              level="M"
+              marginSize={2}
+              fgColor="#181C20"
+              bgColor="#FFFFFF"
+            />
           </div>
         </div>
 
         <button className="share-close-btn" onClick={onClose}>
           Cerrar
         </button>
-
       </div>
     </div>
   );

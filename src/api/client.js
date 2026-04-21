@@ -99,3 +99,12 @@ export async function getStats() {
 export async function publicVerify(hash) {
   return request(`/api/public/verify/${encodeURIComponent(hash)}`, { skipAuth: true });
 }
+
+// --- Credential Visibility ---
+
+export async function toggleVisibility(credentialHash, isPublic) {
+  return request('/api/portal/credentials/visibility', {
+    method: 'PATCH',
+    body: { credential_hash: credentialHash, is_public: isPublic },
+  });
+}

@@ -8,118 +8,183 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
-  padding: 100px 20px 40px;
-  gap: 0;
+  padding: 6rem 24px 40px;
+  gap: 16px;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
 }
 
+/* ── MD3 Outlined Card ── */
 .verificacion-card {
-  background-color: var(--color-card-bg);
-  border-radius: 12px;
-  padding: 40px;
-  max-width: 600px;
+  background-color: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-large);
+  padding: 32px;
   width: 100%;
-  box-shadow: 0 10px 25px var(--color-shadow);
   text-align: center;
-  border-top: 5px solid var(--color-link-teal); /* Detalle de color superior */
 }
 
 .verificacion-icon {
-  font-size: 3rem;
-  margin-bottom: 10px;
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.verificacion-icon--error {
+  color: var(--md-sys-color-error);
 }
 
 .verificacion-title {
-  color: var(--color-blue-dark);
-  font-size: 2rem;
-  margin: 0 0 15px 0;
+  font: var(--md-sys-typescale-headline-medium);
+  color: var(--md-sys-color-on-surface);
+  margin: 0 0 8px 0;
 }
 
 .verificacion-text {
-  color: var(--color-text-main);
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-}
-
-.verificacion-data {
-  background-color: var(--color-modal-item);
-  padding: 15px;
-  border-radius: 8px;
+  font: var(--md-sys-typescale-body-large);
+  color: var(--md-sys-color-on-surface-variant);
   margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
 }
 
-.verificacion-label {
-  font-weight: bold;
-  color: var(--color-text-main);
-}
-
-.verificacion-value {
-  font-family: monospace;
-  color: var(--color-blue-dark);
-  word-break: break-all;
-}
-
-.verificacion-disclaimer {
-  font-size: 0.85rem;
-  color: var(--color-text-body);
-  margin-top: 20px;
-}
-
+/* ── Search Form ── */
 .verificacion-search-form {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .verificacion-search-input {
   flex: 1;
-  padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 0.95rem;
-  color: #374151;
+  padding: 12px 16px;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-small);
+  font: var(--md-sys-typescale-body-medium);
+  font-family: 'Roboto Mono', monospace;
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-surface-container-lowest);
   outline: none;
-  font-family: monospace;
+  transition: border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .verificacion-search-input:focus {
-  border-color: var(--color-link-teal);
-  box-shadow: 0 0 0 2px rgba(26, 199, 184, 0.2);
+  border-color: var(--md-sys-color-primary);
+  border-width: 2px;
+  padding: 11px 15px; /* compensate 2px border */
 }
 
 .verificacion-search-btn {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--color-blue-dark);
-  color: white;
+  padding: 12px 24px;
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--md-sys-shape-corner-small);
   cursor: pointer;
-  font-weight: 600;
+  font: var(--md-sys-typescale-label-large);
   white-space: nowrap;
-  transition: background-color 0.2s;
+  transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .verificacion-search-btn:hover {
-  background-color: #1e40af;
+  opacity: 0.88;
 }
 
 .verificacion-search-btn:disabled {
-  background-color: #9ca3af;
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface-variant);
   cursor: not-allowed;
+  opacity: 1;
 }
 
-.verificacion-icon--error {
-  color: #dc2626;
-}
-
+/* ── Data Rows ── */
 .verificacion-details {
   text-align: left;
 }
 
+.verificacion-data {
+  background-color: var(--md-sys-color-surface-container-low);
+  padding: 14px;
+  border-radius: var(--md-sys-shape-corner-small);
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.verificacion-label {
+  font: var(--md-sys-typescale-label-medium);
+  color: var(--md-sys-color-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.verificacion-value {
+  font: var(--md-sys-typescale-body-large);
+  color: var(--md-sys-color-on-surface);
+}
+
 .verificacion-hash {
+  font-family: 'Roboto Mono', monospace;
   font-size: 0.8rem;
+  word-break: break-all;
+}
+
+/* ── Blockchain badge ── */
+.verificacion-status-badge {
+  font: var(--md-sys-typescale-label-large);
+  padding: 4px 12px;
+  border-radius: var(--md-sys-shape-corner-small);
+  display: inline-block;
+}
+
+.verificacion-status-badge--success {
+  background-color: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+}
+
+.verificacion-status-badge--pending {
+  background-color: var(--md-custom-color-warning-container);
+  color: var(--md-custom-color-on-warning-container);
+}
+
+.verificacion-status-badge--error {
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+}
+
+.verificacion-status-badge--warning {
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* ── Explorer Link ── */
+.verificacion-explorer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1px solid var(--md-sys-color-primary);
+  border-radius: var(--md-sys-shape-corner-small);
+  margin-top: 12px;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+.verificacion-explorer-link:hover {
+  background-color: var(--md-sys-color-primary-container);
+  text-decoration: none;
+}
+
+/* ── Description text ── */
+.verificacion-description {
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 16px;
+}
+
+@media (max-width: 500px) {
+  .verificacion-search-form { flex-direction: column; }
+  .verificacion-card { padding: 20px; }
 }

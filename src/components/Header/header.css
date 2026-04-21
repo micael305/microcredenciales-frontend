@@ -1,20 +1,17 @@
-
-/* Contenedor principal del Header (Fijo arriba) */
+/* ── MD3 Top App Bar ── */
 .header {
-  background-color: var(--color-blue-dark);
+  background-color: var(--md-sys-color-primary);
   width: 100%;
-  height: 4rem; 
+  height: 4rem;
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
-  padding: 0 1.5rem; 
+  padding: 0 1.5rem;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 50;
 }
 
-/* Contenedor interno para centrar y distribuir contenido */
 .header-container {
   max-width: 80rem;
   width: 100%;
@@ -24,56 +21,50 @@
   align-items: center;
 }
 
-/* Estilo del Logo / Título */
 .header-logo {
-  color: white;
-  font-weight: 700; 
-  font-size: 1.125rem; 
+  color: var(--md-sys-color-on-primary);
+  font: var(--md-sys-typescale-title-large);
   cursor: pointer;
-  transition: opacity 0.2s;
   user-select: none;
+  transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .header-logo:hover {
-  opacity: 0.9;
+  opacity: 0.88;
 }
 
-/* Menú de navegación derecho */
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 1.5rem; 
+  gap: 0.5rem;
 }
 
-/* Enlace de verificación pública */
 .nav-link {
   background: none;
   border: none;
-  color: white;
-  font-size: 0.875rem; /* text-sm */
-  font-weight: 500; /* font-medium */
+  color: var(--md-sys-color-on-primary);
+  font: var(--md-sys-typescale-label-large);
   cursor: pointer;
-  transition: color 0.2s;
+  padding: 0.5rem 1rem;
+  border-radius: var(--md-sys-shape-corner-small);
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .nav-link:hover {
-  color: #e5e7eb; /* gray-200 */
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
-/* Botón de Cerrar Sesión */
 .btn-logout-header {
-  background-color: #14b8a6; 
-  color: white;
-  font-weight: 700;
-  font-size: 0.875rem; 
-  padding: 0.5rem 1rem; 
-  border-radius: 0.25rem;
-  border: none;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: var(--md-sys-color-on-primary);
+  font: var(--md-sys-typescale-label-large);
+  padding: 0.5rem 1rem;
+  border-radius: var(--md-sys-shape-corner-small);
   cursor: pointer;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  transition: background-color 0.2s;
-} 
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
 
-.btn-login-header:hover {
-  background-color: #0d9488; 
+.btn-logout-header:hover {
+  background-color: rgba(255, 255, 255, 0.12);
 }
