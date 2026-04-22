@@ -1,9 +1,7 @@
 import "./startCard.css";
 
-function StartCard({ number, label, color }) {
-  const variantClass = color === 'orange'
-    ? 'stat-card--warning'
-    : 'stat-card--primary';
+function StartCard({ number, label, color = 'primary' }) {
+  const variantClass = `stat-card--${color}`;
 
   return (
     <div className={`stat-card ${variantClass}`}>

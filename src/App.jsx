@@ -56,19 +56,25 @@ function MoodleCallback() {
   );
 }
 
+import FontCustomizer from './components/FontCustomizer/FontCustomizer.jsx'
+
 function App() {
   return (
-    <Routes>
-      <Route path='/' element={<Home />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/auth/moodle-callback' element={<MoodleCallback />} />
-      <Route path='/alumno' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route path='/configurar-password' element={<ProtectedRoute><SetPassword /></ProtectedRoute>} />
-      <Route path='/verificar' element={<VerificacionPublica />} />
-      <Route path='/verificar/:hash' element={<VerificacionPublica />} />
-      <Route path='*' element={<NotFound />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/auth/moodle-callback' element={<MoodleCallback />} />
+        <Route path='/alumno' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path='/configurar-password' element={<ProtectedRoute><SetPassword /></ProtectedRoute>} />
+        <Route path='/verificar' element={<VerificacionPublica />} />
+        <Route path='/verificar/:hash' element={<VerificacionPublica />} />
+        <Route path='*' element={<NotFound />} />
+      </Routes>
+      <FontCustomizer />
+    </>
   )
 }
 
 export default App
+

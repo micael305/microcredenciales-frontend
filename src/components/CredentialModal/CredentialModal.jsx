@@ -6,12 +6,12 @@ import {
   MdOpenInNew,
   MdVerified,
   MdCheckCircle,
-  MdPublic,
-  MdLock,
   MdSchool,
   MdAccountBalance,
   MdCalendarToday,
   MdGrade,
+  MdPublic,
+  MdLock,
 } from 'react-icons/md';
 import {
   getBlockchainStatusLabel,
@@ -67,7 +67,7 @@ function CredentialModal({
         aria-modal="true"
         aria-labelledby="cm-dialog-title"
       >
-        {/* ── Dialog Header (mockup style) ── */}
+        {/* ── Dialog Header (Current Style) ── */}
         <header className="cm-dialog-header">
           <div className="cm-dialog-header__left">
             <div className="cm-dialog-header__icon-circle">
@@ -88,152 +88,148 @@ function CredentialModal({
           </button>
         </header>
 
-        {/* ── Dialog Content (2-column compact layout) ── */}
+        {/* ── Dialog Content (Commit 0921e2d Style + Compact Grid) ── */}
         <div className="cm-dialog-content">
-          {/* Status Row */}
-          <div className="cm-status-row">
-            {isVerified && (
-              <span className="cm-chip cm-chip--valid">
-                <MdCheckCircle className="cm-chip__icon" />
-                Válida
-              </span>
-            )}
-            <span className="cm-status-date">
-              Otorgada el {formatDate(credential.completion_date)}
+          {/* Status Badge & Date Row */}
+          <div className="detail-status-row">
+            <span className={`detail-status-chip detail-status-chip--${credential.status}`}>
+              {credential.status === 'claimed' ? 'Guardada' : credential.status === 'issued' ? 'Emitida' : 'Pendiente'}
             </span>
+            <span className="detail-date-text">Otorgada el {formatDate(credential.completion_date)}</span>
           </div>
 
-          {/* ── Two Columns ── */}
-          <div className="cm-columns">
-            {/* Left Column: Academic Info + Visibility */}
-            <div className="cm-col">
-              <h3 className="cm-col__heading">Información Académica</h3>
-              <ul className="cm-info-list">
+          <div className="detail-columns">
+            {/* ── Left Column: Information (Optimized Compact Grid) ── */}
+            <section className="detail-section">
+              <h4 className="detail-section__title">Información</h4>
+              <div className="detail-info-grid">
                 {credential.student_name && (
-                  <li className="cm-info-list__item">
-                    <MdSchool className="cm-info-list__icon" />
-                    <div>
-                      <span className="cm-info-list__label">Alumno</span>
-                      <span className="cm-info-list__value">{credential.student_name}</span>
+                  <div className="detail-info-item">
+                    <div className="detail-info-item__header">
+                      <MdSchool className="detail-info-item__icon" />
+                      <span className="detail-info-item__label">Alumno</span>
                     </div>
-                  </li>
+                    <span className="detail-info-item__value">{credential.student_name}</span>
+                  </div>
                 )}
-                <li className="cm-info-list__item">
-                  <MdAccountBalance className="cm-info-list__icon" />
-                  <div>
-                    <span className="cm-info-list__label">Emisor</span>
-                    <span className="cm-info-list__value">UTN — FRT</span>
+                <div className="detail-info-item">
+                  <div className="detail-info-item__header">
+                    <MdAccountBalance className="detail-info-item__icon" />
+                    <span className="detail-info-item__label">Institución</span>
                   </div>
-                </li>
-                <li className="cm-info-list__item">
-                  <MdCalendarToday className="cm-info-list__icon" />
-                  <div>
-                    <span className="cm-info-list__label">Emisión</span>
-                    <span className="cm-info-list__value">{formatDate(credential.completion_date)}</span>
+                  <span className="detail-info-item__value">UTN — FRT</span>
+                </div>
+                <div className="detail-info-item">
+                  <div className="detail-info-item__header">
+                    <MdCalendarToday className="detail-info-item__icon" />
+                    <span className="detail-info-item__label">Emisión</span>
                   </div>
-                </li>
+                  <span className="detail-info-item__value">{formatDate(credential.completion_date)}</span>
+                </div>
                 {credential.grade && (
-                  <li className="cm-info-list__item">
-                    <MdGrade className="cm-info-list__icon" />
-                    <div>
-                      <span className="cm-info-list__label">Calificación</span>
-                      <span className="cm-info-list__value">{credential.grade}</span>
+                  <div className="detail-info-item">
+                    <div className="detail-info-item__header">
+                      <MdGrade className="detail-info-item__icon" />
+                      <span className="detail-info-item__label">Calificación</span>
                     </div>
-                  </li>
+                    <span className="detail-info-item__value">{credential.grade}</span>
+                  </div>
                 )}
-              </ul>
+              </div>
 
-              {/* Visibility Toggle */}
+              {/* Visibility Switch (Integrated into Info Section) */}
               {onToggleVisibility && (
-                <div className="cm-visibility">
-                  <div className="cm-visibility__left">
-                    {credential.is_public ? (
-                      <MdPublic className="cm-visibility__icon cm-visibility__icon--public" />
-                    ) : (
-                      <MdLock className="cm-visibility__icon" />
-                    )}
-                    <span className="cm-visibility__label">
+                <div className="detail-visibility-box">
+                  <div className="detail-visibility-text">
+                    <span className="detail-visibility-label">
+                      {credential.is_public ? <MdPublic /> : <MdLock />}
                       {credential.is_public ? 'Pública' : 'Privada'}
+                    </span>
+                    <span className="detail-visibility-help">
+                      {credential.is_public ? 'Visible para terceros' : 'Solo visible para ti'}
                     </span>
                   </div>
                   <button
                     role="switch"
                     aria-checked={credential.is_public}
-                    className={`cm-switch ${credential.is_public ? 'cm-switch--on' : ''}`}
+                    className={`detail-switch ${credential.is_public ? 'detail-switch--on' : ''}`}
                     onClick={() => onToggleVisibility(credential)}
                   >
-                    <span className="cm-switch__track">
-                      <span className="cm-switch__thumb" />
+                    <span className="detail-switch__track">
+                      <span className="detail-switch__thumb" />
                     </span>
                   </button>
                 </div>
               )}
-            </div>
+            </section>
 
-            {/* Right Column: Blockchain */}
-            <div className="cm-col">
-              <h3 className="cm-col__heading">Blockchain</h3>
+            {/* ── Right Column: Blockchain ── */}
+            <section className="detail-section">
+              <h4 className="detail-section__title">Verificación Blockchain</h4>
               {bc ? (
-                <div className="cm-bc-card">
-                  <span className={`cm-bc-badge cm-bc-badge--${bcVariant}`}>
-                    {getBlockchainStatusLabel(bc.status)}
-                  </span>
+                <div className="detail-bc-card">
+                  <div className="detail-bc-header">
+                    <span className={`detail-bc-badge detail-bc-badge--${bcVariant}`}>
+                      <MdVerified className="detail-bc-badge__icon" />
+                      {getBlockchainStatusLabel(bc.status)}
+                    </span>
+                    <span className="detail-bc-network">Red {bc.network}</span>
+                  </div>
 
                   {credential.credential_hash && (
-                    <div className="cm-hash-block">
-                      <span className="cm-hash-block__label">Hash (SHA-256)</span>
-                      <div className="cm-hash-block__row">
-                        <code className="cm-hash-block__code">{truncateHash(credential.credential_hash)}</code>
+                    <div className="detail-hash-box">
+                      <span className="detail-hash-label">Huella Digital (SHA-256)</span>
+                      <div className="detail-hash-row">
+                        <code className="detail-hash-code">{truncateHash(credential.credential_hash)}</code>
                         <button
-                          className="cm-hash-block__copy"
+                          className="detail-copy-btn-mini"
                           onClick={() => copyToClipboard(credential.credential_hash, setHashCopied)}
-                          title={hashCopied ? 'Copiado' : 'Copiar'}
+                          title="Copiar Hash"
                         >
                           <MdContentCopy />
+                          {hashCopied && <span className="copy-feedback">¡Listo!</span>}
                         </button>
                       </div>
                     </div>
                   )}
 
                   {bc.txn_id && (
-                    <div className="cm-hash-block">
-                      <span className="cm-hash-block__label">Tx Hash</span>
-                      <div className="cm-hash-block__row">
-                        <code className="cm-hash-block__code">{truncateHash(bc.txn_id)}</code>
+                    <div className="detail-hash-box">
+                      <span className="detail-hash-label">Transaction Hash</span>
+                      <div className="detail-hash-row">
+                        <code className="detail-hash-code">{truncateHash(bc.txn_id)}</code>
                         <button
-                          className="cm-hash-block__copy"
+                          className="detail-copy-btn-mini"
                           onClick={() => copyToClipboard(bc.txn_id, setTxCopied)}
-                          title={txCopied ? 'Copiado' : 'Copiar'}
+                          title="Copiar Tx Hash"
                         >
                           <MdContentCopy />
+                          {txCopied && <span className="copy-feedback">¡Listo!</span>}
                         </button>
                       </div>
                     </div>
                   )}
 
-                  <div className="cm-bc-footer">
-                    <span className="cm-bc-footer__net">Red {bc.network}</span>
-                    {bc.explorer_url && (
-                      <a
-                        href={bc.explorer_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="cm-bc-footer__link"
-                      >
-                        Ver en Explorer
-                        <MdOpenInNew className="cm-bc-footer__link-icon" />
-                      </a>
-                    )}
-                  </div>
+                  {bc.explorer_url && (
+                    <a
+                      href={bc.explorer_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="detail-explorer-link"
+                    >
+                      Verificar en Explorer
+                      <MdOpenInNew />
+                    </a>
+                  )}
                 </div>
               ) : (
-                <p className="cm-empty-text">Sin datos de blockchain.</p>
+                <p className="detail-empty-text">Sin datos de blockchain disponibles.</p>
               )}
-            </div>
+            </section>
           </div>
         </div>
 
-        {/* ── Dialog Actions (mockup style) ── */}
+        {/* ── Dialog Actions (Current Style) ── */}
         <footer className="cm-dialog-actions">
           <button className="cm-action-btn cm-action-btn--outlined" onClick={onClose}>
             Cerrar

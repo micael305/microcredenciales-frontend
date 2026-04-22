@@ -10,14 +10,18 @@
  * Typography: Public Sans (headlines) + Inter (body/labels)
  * ================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Public+Sans:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Manrope:wght@400;500;600;700&family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=Hanken+Grotesk:wght@400;500;600&family=Urbanist:wght@400;600;700&family=Figtree:wght@400;500;600&family=Sora:wght@400;600;700&family=Be+Vietnam+Pro:wght@400;500;600&family=Readex+Pro:wght@400;600&family=Lexend:wght@400;500;600&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Onest:wght@400;500;600&family=Schibsted+Grotesk:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Jost:wght@400;600;700&family=Quicksand:wght@400;600&family=Archivo:wght@400;600;700&family=Inter:wght@400;500;600&family=Epilogue:wght@400;600;700&family=Public+Sans:wght@400;600&family=Montserrat:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 :root {
-  /* ── Primary ── */
-  --md-sys-color-primary: #00537D;
+  /* ── Typography Families (Dynamic) ── */
+  --font-family-headline: 'Space Grotesk', sans-serif;
+  --font-family-body: 'Manrope', sans-serif;
+
+  /* ── Primary (Unified & Vibrant) ── */
+  --md-sys-color-primary: #005C8A;
   --md-sys-color-on-primary: #FFFFFF;
-  --md-sys-color-primary-container: #C4E7FF;
-  --md-sys-color-on-primary-container: #001E2E;
+  --md-sys-color-primary-container: #D1E4FF;
+  --md-sys-color-on-primary-container: #001D36;
 
   /* ── Secondary ── */
   --md-sys-color-secondary: #4E616D;
@@ -25,11 +29,11 @@
   --md-sys-color-secondary-container: #D1E5F4;
   --md-sys-color-on-secondary-container: #0A1E28;
 
-  /* ── Tertiary ── */
-  --md-sys-color-tertiary: #006B5E;
+  /* ── Tertiary (Slate Blue / Lavender - More elegant) ── */
+  --md-sys-color-tertiary: #525E7D;
   --md-sys-color-on-tertiary: #FFFFFF;
-  --md-sys-color-tertiary-container: #72F8E0;
-  --md-sys-color-on-tertiary-container: #00201B;
+  --md-sys-color-tertiary-container: #DEE1FF;
+  --md-sys-color-on-tertiary-container: #0E1A37;
 
   /* ── Error ── */
   --md-sys-color-error: #BA1A1A;
@@ -47,7 +51,7 @@
   --md-sys-color-surface-container-high: #E5EAEE;
   --md-sys-color-surface-container-highest: #DFE4E8;
   --md-sys-color-surface-dim: #D6DBE0;
-  --md-sys-color-surface-tint: #00537D;
+  --md-sys-color-surface-tint: #005C8A;
   --md-sys-color-background: #F6FAFE;
 
   /* ── Outline ── */
@@ -68,29 +72,29 @@
   --md-custom-color-warning-container: #FFDEAE;
   --md-custom-color-on-warning-container: #281800;
 
-  /* ── Success (custom — verification states) ── */
-  --md-custom-color-success: #137333;
-  --md-custom-color-success-container: #e6f4ea;
-  --md-custom-color-on-success-container: #137333;
-  --md-custom-color-success-border: #ceead6;
+  /* ── Success (Muted Professional Green) ── */
+  --md-custom-color-success: #386A44;
+  --md-custom-color-success-container: #D7E8D7;
+  --md-custom-color-on-success-container: #00210A;
+  --md-custom-color-success-border: #B5CCB5;
 
   /* =================================================================
    * Typography (MD3 Type Scale)
    *   Headlines: Public Sans — institutional, geometric clarity
    *   Body/Labels: Inter — neutral, systematic for technical data
    * ================================================================= */
-  --md-sys-typescale-display-large: 700 2.25rem/2.75rem 'Public Sans', sans-serif;
-  --md-sys-typescale-headline-large: 700 2rem/2.5rem 'Public Sans', sans-serif;
-  --md-sys-typescale-headline-medium: 600 1.5rem/2rem 'Public Sans', sans-serif;
-  --md-sys-typescale-title-large: 600 1.25rem/1.75rem 'Inter', sans-serif;
-  --md-sys-typescale-title-medium: 600 1rem/1.5rem 'Inter', sans-serif;
-  --md-sys-typescale-title-small: 600 0.875rem/1.25rem 'Inter', sans-serif;
-  --md-sys-typescale-body-large: 400 1rem/1.5rem 'Inter', sans-serif;
-  --md-sys-typescale-body-medium: 400 0.875rem/1.25rem 'Inter', sans-serif;
-  --md-sys-typescale-body-small: 400 0.75rem/1rem 'Inter', sans-serif;
-  --md-sys-typescale-label-large: 600 0.75rem/1rem 'Inter', sans-serif;
-  --md-sys-typescale-label-medium: 600 0.6875rem/0.875rem 'Inter', sans-serif;
-  --md-sys-typescale-label-small: 600 0.625rem/0.75rem 'Inter', sans-serif;
+  --md-sys-typescale-display-large: 700 2.25rem/2.75rem var(--font-family-headline);
+  --md-sys-typescale-headline-large: 700 2rem/2.5rem var(--font-family-headline);
+  --md-sys-typescale-headline-medium: 600 1.5rem/2rem var(--font-family-headline);
+  --md-sys-typescale-title-large: 600 1.25rem/1.75rem var(--font-family-body);
+  --md-sys-typescale-title-medium: 600 1rem/1.5rem var(--font-family-body);
+  --md-sys-typescale-title-small: 600 0.875rem/1.25rem var(--font-family-body);
+  --md-sys-typescale-body-large: 400 1rem/1.5rem var(--font-family-body);
+  --md-sys-typescale-body-medium: 400 0.875rem/1.25rem var(--font-family-body);
+  --md-sys-typescale-body-small: 400 0.75rem/1rem var(--font-family-body);
+  --md-sys-typescale-label-large: 600 0.75rem/1rem var(--font-family-body);
+  --md-sys-typescale-label-medium: 600 0.6875rem/0.875rem var(--font-family-body);
+  --md-sys-typescale-label-small: 600 0.625rem/0.75rem var(--font-family-body);
 
   /* =================================================================
    * Shape (MD3 Corner Radii)
@@ -100,43 +104,44 @@
   --md-sys-shape-corner-small: 8px;
   --md-sys-shape-corner-medium: 12px;
   --md-sys-shape-corner-large: 16px;
-  --md-sys-shape-corner-extra-large: 24px;
+  --md-sys-shape-corner-extra-large: 28px;
   --md-sys-shape-corner-full: 9999px;
 
   /* =================================================================
-   * Motion (MD3 Easing & Duration)
+   * Motion (MD3 Easing & Durations)
    * ================================================================= */
-  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
-  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
   --md-sys-motion-duration-short: 150ms;
   --md-sys-motion-duration-medium: 250ms;
   --md-sys-motion-duration-long: 400ms;
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0.0, 0, 1.0);
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0.0, 0, 1.0);
+
+  /* =================================================================
+   * Elevation
+   * ================================================================= */
+  --md-sys-elevation-level1: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --md-sys-elevation-level2: 0 2px 6px 2px rgba(0, 0, 0, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
 }
 
-
 /* =================================================================
- * Global Reset & Defaults
+ * Global Base Styles
  * ================================================================= */
-
-*,
-*::before,
-*::after {
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
   font: var(--md-sys-typescale-body-medium);
+  background-color: var(--md-sys-color-background);
   color: var(--md-sys-color-on-surface);
-  background-color: var(--md-sys-color-surface);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  margin: 0;
+h1, h2, h3, h4 {
+  font-family: var(--font-family-headline);
   color: var(--md-sys-color-on-surface);
 }
 
@@ -151,7 +156,7 @@ a:hover {
 }
 
 /* =================================================================
- * Utility: Modal Overlay (shared by ShareModal)
+ * Utility: Modal Overlay
  * ================================================================= */
 .modal-overlay {
   position: fixed;

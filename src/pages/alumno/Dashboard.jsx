@@ -14,6 +14,7 @@ import { useAuth } from '../../context/AuthContext';
 import * as api from '../../api/client';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
+import StartCard from '../../components/StartCard/StartCard';
 import CredentialModal from '../../components/CredentialModal/CredentialModal';
 import ShareModal from '../../components/ShareModal/ShareModal';
 import './alumno.css';
@@ -132,60 +133,47 @@ function Dashboard() {
       <Header />
 
       <main className="dash-main">
-        {/* ── Hero ── */}
-        <section className="dash-hero">
-          <div className="dash-hero__text">
-            <h1 className="dash-hero__title">
-              Bienvenido, {user?.full_name?.split(' ')[0] || 'Alumno'}
-            </h1>
-            <p className="dash-hero__subtitle">
-              Gestiona y comparte tus logros académicos
-            </p>
+        <div className="dash-hero-row">
+          <header className="dashboard-header">
+            <h1>Bienvenido, {user?.full_name || 'Alumno'}</h1>
+            <h3>Gestiona y comparte tus logros académicos.</h3>
+          </header>
+
+          <div className="starcard-container">
+            <StartCard number={emitted} label="Emitidas" color="primary" />
+            <StartCard number={pending} label="Pendientes" color="warning" />
           </div>
-          {/* Compact Stats Chips */}
-          {stats && (
-            <div className="dash-stats-row">
-              <div className="dash-stat-chip">
-                <span className="dash-stat-chip__number">{emitted}</span>
-                <span className="dash-stat-chip__label">Emitidas</span>
-              </div>
-              {pending > 0 && (
-                <div className="dash-stat-chip dash-stat-chip--warning">
-                  <span className="dash-stat-chip__number">{pending}</span>
-                  <span className="dash-stat-chip__label">Pendientes</span>
-                </div>
-              )}
-            </div>
-          )}
-        </section>
+        </div>
+        <hr className="header-divider" />
 
         {loading ? (
-          <div className="dash-loading"><p>Cargando credenciales…</p></div>
+          <div className="dash-loading">
+            <p>Cargando credenciales...</p>
+          </div>
         ) : error ? (
-          <div className="dash-error"><p>{error}</p></div>
+          <div className="dash-error">
+            <p>{error}</p>
+          </div>
         ) : (
           <>
+
             {/* ── Toolbar: Title + Filter + View Toggle ── */}
             <div className="dash-toolbar">
               <h2 className="dash-toolbar__title">Mis Microcredenciales</h2>
-              <div className="dash-toolbar__controls">
-                {/* Filter */}
-                <div className="dash-filter">
-                  <MdFilterList className="dash-filter__icon" />
-                  <select
-                    className="dash-filter__select"
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                    id="credential-filter"
-                  >
-                    {FILTER_OPTIONS.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {/* View Toggle */}
+              
+              <div className="dash-toolbar__actions">
+                <nav className="dash-filter-tabs">
+                  {['all', 'issued', 'claimed', 'pending'].map((f) => (
+                    <button
+                      key={f}
+                      className={`dash-filter-tab ${filter === f ? 'dash-filter-tab--active' : ''}`}
+                      onClick={() => setFilter(f)}
+                    >
+                      {f === 'all' ? 'Todas' : STATUS_LABELS[f]}
+                    </button>
+                  ))}
+                </nav>
+
                 <div className="dash-view-toggle">
                   <button
                     className={`dash-view-toggle__btn ${viewMode === 'grid' ? 'dash-view-toggle__btn--active' : ''}`}
@@ -207,68 +195,43 @@ function Dashboard() {
               </div>
             </div>
 
-            {/* ── Credentials ── */}
             {filtered.length === 0 ? (
               <div className="dash-empty">
-                <p className="dash-empty__text">
-                  {filter === 'all'
-                    ? 'Aún no tienes credenciales. Completa cursos en Moodle para obtenerlas.'
-                    : 'No hay credenciales con el filtro seleccionado.'}
-                </p>
+                <p>No hay credenciales con el filtro seleccionado.</p>
               </div>
             ) : viewMode === 'grid' ? (
-              <div className="dash-grid">
+              <div className="dash-grid-v2">
                 {filtered.map((cred) => (
-                  <article className="cred-card" key={cred.id} id={`cred-${cred.id}`}>
-                    <div className="cred-card__header">
-                      <div className="cred-card__icon">
+                  <article className="cred-card-v2" key={cred.id}>
+                    <div className="cred-card-v2__header">
+                      <div className="cred-card-v2__icon">
                         <MdSchool />
                       </div>
-                      <span className={`cred-badge cred-badge--${cred.status}`}>
+                      <span className={`cred-badge-v2 cred-badge-v2--${cred.status}`}>
                         {STATUS_LABELS[cred.status] || cred.status}
                       </span>
                     </div>
-                    <div className="cred-card__body">
-                      <h3 className="cred-card__title">{cred.course_name}</h3>
-                      <p className="cred-card__meta">
-                        <MdAccountBalance className="cred-card__meta-icon" />
+                    <div className="cred-card-v2__body">
+                      <h3 className="cred-card-v2__title">{cred.course_name}</h3>
+                      <p className="cred-card-v2__meta">
+                        <MdAccountBalance className="cred-card-v2__meta-icon" />
                         UTN-FRT
                       </p>
-                      <p className="cred-card__meta cred-card__meta--secondary">
-                        <MdCalendarToday className="cred-card__meta-icon" />
+                      <p className="cred-card-v2__meta">
+                        <MdCalendarToday className="cred-card-v2__meta-icon" />
                         {formatDate(cred.completion_date)}
                       </p>
                     </div>
-                    {/* Visibility Row */}
-                    <div className="cred-card__visibility">
-                      <div className="cred-card__visibility-info">
-                        {cred.is_public ? <MdPublic /> : <MdLock />}
-                        <span>{cred.is_public ? 'Pública' : 'Privada'}</span>
-                      </div>
-                      <button
-                        role="switch"
-                        aria-checked={cred.is_public}
-                        className={`cred-switch ${cred.is_public ? 'cred-switch--on' : ''}`}
-                        onClick={() => handleToggleVisibility(cred)}
-                        title={cred.is_public ? 'Hacer privada' : 'Hacer pública'}
-                      >
-                        <span className="cred-switch__track">
-                          <span className="cred-switch__thumb" />
-                        </span>
-                      </button>
-                    </div>
-                    <div className="cred-card__footer">
-                      <button
-                        className="cred-card__btn-primary"
+                    <div className="cred-card-v2__footer">
+                      <button 
+                        className="cred-card-v2__btn-primary"
                         onClick={() => handleViewDetails(cred)}
                       >
                         Ver Detalles
                       </button>
-                      <button
-                        className="cred-card__btn-icon"
+                      <button 
+                        className="cred-card-v2__btn-icon"
                         onClick={() => setCredentialToShare(cred)}
-                        aria-label="Compartir"
-                        title="Compartir"
                       >
                         <MdShare />
                       </button>
@@ -277,47 +240,29 @@ function Dashboard() {
                 ))}
               </div>
             ) : (
-              /* ── List View ── */
-              <div className="dash-list">
+              <div className="dash-list-v2">
                 {filtered.map((cred) => (
-                  <div className="cred-list-item" key={cred.id} id={`cred-list-${cred.id}`}>
-                    <div className="cred-list-item__icon">
+                  <div className="cred-list-row-v2" key={cred.id}>
+                    <div className="cred-list-row-v2__icon">
                       <MdSchool />
                     </div>
-                    <div className="cred-list-item__content">
-                      <h3 className="cred-list-item__title">{cred.course_name}</h3>
-                      <p className="cred-list-item__meta">
-                        UTN-FRT · {formatDate(cred.completion_date)}
-                      </p>
+                    <div className="cred-list-row-v2__content">
+                      <h4 className="cred-list-row-v2__title">{cred.course_name}</h4>
+                      <p className="cred-list-row-v2__subtitle">UTN-FRT · {formatDate(cred.completion_date)}</p>
                     </div>
-                    <span className={`cred-badge cred-badge--${cred.status}`}>
+                    <span className={`cred-badge-v2 cred-badge-v2--${cred.status}`}>
                       {STATUS_LABELS[cred.status] || cred.status}
                     </span>
-                    <div className="cred-list-item__visibility">
-                      {cred.is_public ? <MdPublic className="cred-list-item__vis-icon cred-list-item__vis-icon--public" /> : <MdLock className="cred-list-item__vis-icon" />}
-                      <button
-                        role="switch"
-                        aria-checked={cred.is_public}
-                        className={`cred-switch cred-switch--sm ${cred.is_public ? 'cred-switch--on' : ''}`}
-                        onClick={() => handleToggleVisibility(cred)}
-                        title={cred.is_public ? 'Hacer privada' : 'Hacer pública'}
-                      >
-                        <span className="cred-switch__track">
-                          <span className="cred-switch__thumb" />
-                        </span>
-                      </button>
-                    </div>
-                    <div className="cred-list-item__actions">
-                      <button
-                        className="cred-list-item__btn"
+                    <div className="cred-list-row-v2__actions">
+                      <button 
+                        className="cred-list-row-v2__btn"
                         onClick={() => handleViewDetails(cred)}
                       >
-                        Detalles
+                        Ver Detalles
                       </button>
-                      <button
-                        className="cred-card__btn-icon"
+                      <button 
+                        className="cred-list-row-v2__btn-icon"
                         onClick={() => setCredentialToShare(cred)}
-                        aria-label="Compartir"
                       >
                         <MdShare />
                       </button>

@@ -15,6 +15,11 @@
   color: var(--md-sys-color-on-primary-container);
 }
 
+.stat-card--secondary {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
 .stat-card--warning {
   background-color: var(--md-custom-color-warning-container);
   color: var(--md-custom-color-on-warning-container);

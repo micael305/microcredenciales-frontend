@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 4.5rem 24px 24px 24px; /* Account for fixed header */
 }
 
 /* --- Auth Card --- */
@@ -63,6 +63,37 @@
   border-color: var(--md-sys-color-primary);
   border-width: 2px;
   padding: calc(0.75rem - 1px) calc(1rem - 1px);
+}
+
+.form-input--with-icon {
+  padding-right: 3.5rem;
+}
+
+.auth-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-visibility-btn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: var(--md-sys-shape-corner-full);
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+.auth-visibility-btn:hover {
+  background-color: var(--md-sys-color-surface-container-high);
 }
 
 /* --- Buttons --- */
@@ -162,7 +193,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 4.5rem 2rem 2rem 2rem; /* Account for fixed header */
   text-align: center;
 }
 

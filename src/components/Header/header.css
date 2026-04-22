@@ -1,15 +1,17 @@
-/* ── MD3 Top App Bar ── */
 .header {
   background-color: var(--md-sys-color-primary);
+  backdrop-filter: blur(8px);
   width: 100%;
-  height: 4rem;
+  height: 4.5rem;
   display: flex;
   align-items: center;
   padding: 0 1.5rem;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 50;
+  z-index: 100;
+  box-shadow: var(--md-sys-elevation-level1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .header-container {
@@ -22,8 +24,11 @@
 }
 
 .header-logo {
-  color: var(--md-sys-color-on-primary);
-  font: var(--md-sys-typescale-title-large);
+  color: #FFFFFF;
+  font-family: var(--font-family-headline);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   cursor: pointer;
   user-select: none;
   transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
@@ -42,29 +47,33 @@
 .nav-link {
   background: none;
   border: none;
-  color: var(--md-sys-color-on-primary);
+  color: rgba(255, 255, 255, 0.9);
   font: var(--md-sys-typescale-label-large);
   cursor: pointer;
-  padding: 0.5rem 1rem;
-  border-radius: var(--md-sys-shape-corner-small);
-  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  transition: all var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
 }
 
 .btn-logout-header {
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  color: var(--md-sys-color-on-primary);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #FFFFFF;
   font: var(--md-sys-typescale-label-large);
-  padding: 0.5rem 1rem;
-  border-radius: var(--md-sys-shape-corner-small);
+  padding: 0.6rem 1.4rem;
+  border-radius: var(--md-sys-shape-corner-full);
   cursor: pointer;
-  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  transition: all var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .btn-logout-header:hover {
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  border-color: var(--md-sys-color-primary-container);
+  box-shadow: var(--md-sys-elevation-level2);
 }

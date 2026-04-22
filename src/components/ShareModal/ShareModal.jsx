@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { MdContentCopy } from 'react-icons/md';
+import { MdContentCopy, MdClose, MdShare } from 'react-icons/md';
 import './ShareModal.css';
 
 function ShareModal({ credential, onClose }) {
@@ -18,46 +18,74 @@ function ShareModal({ credential, onClose }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="share-modal-content" onClick={(e) => e.stopPropagation()}>
-
-        <div className="share-modal-header">
-          <h2 className="share-modal-title">Compartir Credencial</h2>
-          <button className="share-modal-close-icon" onClick={onClose} aria-label="Cerrar">
-            ×
+    <div className="share-scrim" onClick={onClose}>
+      <div
+        className="share-dialog"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="share-title"
+      >
+        {/* ── Header (MD3 Shell Style) ── */}
+        <header className="share-header">
+          <div className="share-header__left">
+            <div className="share-header__icon-circle">
+              <MdShare className="share-header__icon" />
+            </div>
+            <div className="share-header__text">
+              <h2 className="share-header__title" id="share-title">
+                Compartir Credencial
+              </h2>
+              <p className="share-header__subtitle">Enlace de verificación pública</p>
+            </div>
+          </div>
+          <button className="share-header__close" onClick={onClose} aria-label="Cerrar">
+            <MdClose />
           </button>
-        </div>
+        </header>
 
-        <p className="share-modal-text">
-          Cualquier persona con este enlace podrá verificar la autenticidad de tu credencial
-          en el registro institucional y en la blockchain.
-        </p>
+        {/* ── Body ── */}
+        <div className="share-body">
+          <p className="share-description">
+            Cualquier persona con este enlace podrá verificar la autenticidad de tu credencial
+            en el registro institucional y en la blockchain.
+          </p>
 
-        <div className="share-modal-box">
-          <p className="share-modal-label">Enlace de Verificación:</p>
-          <div className="share-input-group">
-            <input type="text" readOnly value={shareLink} className="share-input" />
-            <button className="share-copy-btn" onClick={handleCopy}>
-              <MdContentCopy />
-              {copied ? '¡Copiado!' : 'Copiar'}
-            </button>
+          <div className="share-link-section">
+            <label className="share-label">Enlace Directo</label>
+            <div className="share-input-group">
+              <input type="text" readOnly value={shareLink} className="share-input" />
+              <button 
+                className={`share-copy-btn ${copied ? 'share-copy-btn--success' : ''}`}
+                onClick={handleCopy}
+              >
+                <MdContentCopy />
+                <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
+              </button>
+            </div>
           </div>
 
-          <div className="share-qr-container">
-            <QRCodeSVG
-              value={shareLink}
-              size={180}
-              level="M"
-              marginSize={2}
-              fgColor="#181C20"
-              bgColor="#FFFFFF"
-            />
+          <div className="share-qr-section">
+            <label className="share-label">Código QR</label>
+            <div className="share-qr-card">
+              <QRCodeSVG
+                value={shareLink}
+                size={160}
+                level="M"
+                marginSize={2}
+                fgColor="var(--md-sys-color-on-surface)"
+                bgColor="transparent"
+              />
+            </div>
           </div>
         </div>
 
-        <button className="share-close-btn" onClick={onClose}>
-          Cerrar
-        </button>
+        {/* ── Actions (Footer) ── */}
+        <footer className="share-actions">
+          <button className="share-action-btn share-action-btn--tonal" onClick={onClose}>
+            Cerrar
+          </button>
+        </footer>
       </div>
     </div>
   );
