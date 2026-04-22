@@ -10,7 +10,6 @@ import Home from './pages/auth/Home.jsx'
 
 // Student views
 import Dashboard from './pages/alumno/Dashboard.jsx'
-import CredentialDetail from './pages/alumno/CredentialDetail/CredentialDetail.jsx'
 
 // Public verification
 import VerificacionPublica from './pages/VerificacionPublica/VerificacionPublica.jsx'
@@ -64,7 +63,6 @@ function App() {
       <Route path='/login' element={<Login />} />
       <Route path='/auth/moodle-callback' element={<MoodleCallback />} />
       <Route path='/alumno' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route path='/alumno/credencial/:id' element={<ProtectedRoute><CredentialDetail /></ProtectedRoute>} />
       <Route path='/configurar-password' element={<ProtectedRoute><SetPassword /></ProtectedRoute>} />
       <Route path='/verificar' element={<VerificacionPublica />} />
       <Route path='/verificar/:hash' element={<VerificacionPublica />} />

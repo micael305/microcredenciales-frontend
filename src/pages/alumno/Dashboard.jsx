@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   MdGridView,
   MdViewList,
@@ -15,6 +14,7 @@ import { useAuth } from '../../context/AuthContext';
 import * as api from '../../api/client';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
+import CredentialModal from '../../components/CredentialModal/CredentialModal';
 import ShareModal from '../../components/ShareModal/ShareModal';
 import './alumno.css';
 
@@ -42,12 +42,13 @@ function formatDate(isoString) {
 
 function Dashboard() {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [credentials, setCredentials] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [credentialToShare, setCredentialToShare] = useState(null);
+  const [selectedCredential, setSelectedCredential] = useState(null);
+  const [loadingDetail, setLoadingDetail] = useState(false);
 
   // UI state
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
@@ -75,6 +76,40 @@ function Dashboard() {
     const newValue = !cred.is_public;
     try {
       await api.toggleVisibility(cred.credential_hash, newValue);
+      setCredentials((prev) =>
+        prev.map((c) =>
+          c.id === cred.id ? { ...c, is_public: newValue } : c
+        )
+      );
+    } catch (err) {
+      console.error('Error toggling visibility:', err);
+    }
+  }, []);
+
+  const handleViewDetails = useCallback(async (cred) => {
+    setLoadingDetail(true);
+    try {
+      const detail = await api.verifyCredential(cred.id);
+      setSelectedCredential(detail);
+    } catch {
+      try {
+        const detail = await api.getCredentialDetail(cred.id);
+        setSelectedCredential(detail);
+      } catch {
+        setSelectedCredential(cred);
+      }
+    } finally {
+      setLoadingDetail(false);
+    }
+  }, []);
+
+  const handleModalToggleVisibility = useCallback(async (cred) => {
+    const newValue = !cred.is_public;
+    try {
+      await api.toggleVisibility(cred.credential_hash, newValue);
+      setSelectedCredential((prev) =>
+        prev ? { ...prev, is_public: newValue } : prev
+      );
       setCredentials((prev) =>
         prev.map((c) =>
           c.id === cred.id ? { ...c, is_public: newValue } : c
@@ -225,7 +260,7 @@ function Dashboard() {
                     <div className="cred-card__footer">
                       <button
                         className="cred-card__btn-primary"
-                        onClick={() => navigate(`/alumno/credencial/${cred.id}`)}
+                        onClick={() => handleViewDetails(cred)}
                       >
                         Ver Detalles
                       </button>
@@ -275,7 +310,7 @@ function Dashboard() {
                     <div className="cred-list-item__actions">
                       <button
                         className="cred-list-item__btn"
-                        onClick={() => navigate(`/alumno/credencial/${cred.id}`)}
+                        onClick={() => handleViewDetails(cred)}
                       >
                         Detalles
                       </button>
@@ -297,6 +332,20 @@ function Dashboard() {
 
       <Footer />
 
+      {loadingDetail && (
+        <div className="modal-overlay">
+          <p style={{ color: 'var(--md-sys-color-inverse-on-surface)', font: 'var(--md-sys-typescale-body-large)' }}>
+            Cargando detalle…
+          </p>
+        </div>
+      )}
+
+      <CredentialModal
+        credential={selectedCredential}
+        onClose={() => setSelectedCredential(null)}
+        onToggleVisibility={handleModalToggleVisibility}
+        onShare={(cred) => setCredentialToShare(cred)}
+      />
       <ShareModal
         credential={credentialToShare}
         onClose={() => setCredentialToShare(null)}
