@@ -1,42 +1,36 @@
-import { useState, useEffect, useCallback } from "react";
-import { useAuth } from "../../context/AuthContext";
-import * as api from "../../api/client";
-// Components
-import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
-import StartCard from "../../components/StartCard/StartCard";
-import CredentialCard from "../../components/CredentialCard/CredentialCard";
-// Modals
-import CredentialModal from "../../components/CredentialModal/CredentialModal";
-import ShareModal from "../../components/ShareModal/ShareModal";
-// Styles
-import "./alumno.css";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import * as api from '../../api/client';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
+import CredentialCard from '../../components/CredentialCard/CredentialCard';
+import ShareModal from '../../components/ShareModal/ShareModal';
+import './alumno.css';
 
 const STATUS_LABELS = {
-  issued: "Emitida",
-  claimed: "Guardada",
-  pending: "Pendiente",
+  issued: 'Emitida',
+  claimed: 'Guardada',
+  pending: 'Pendiente',
 };
 
 function formatDate(isoString) {
-  if (!isoString) return "—";
-  const date = new Date(isoString);
-  return date.toLocaleDateString("es-AR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
+  if (!isoString) return '—';
+  return new Date(isoString).toLocaleDateString('es-AR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   });
 }
 
 function Dashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedCredential, setSelectedCredential] = useState(null);
   const [credentialToShare, setCredentialToShare] = useState(null);
-  const [loadingDetail, setLoadingDetail] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -48,7 +42,7 @@ function Dashboard() {
         setStats(statsData);
         setCredentials(credsData);
       } catch (err) {
-        setError(err.message || "Error al cargar los datos");
+        setError(err.message || 'Error al cargar los datos');
       } finally {
         setLoading(false);
       }
@@ -56,117 +50,90 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  const handleViewDetails = async (cred) => {
-    setLoadingDetail(true);
-    try {
-      // Fetch with blockchain verification data
-      const detail = await api.verifyCredential(cred.id);
-      setSelectedCredential(detail);
-    } catch {
-      // Fallback to basic detail if verify fails
-      try {
-        const detail = await api.getCredentialDetail(cred.id);
-        setSelectedCredential(detail);
-      } catch {
-        setSelectedCredential(cred);
-      }
-    } finally {
-      setLoadingDetail(false);
-    }
-  };
-
-  const handleToggleVisibility = useCallback(async (cred) => {
-    const newValue = !cred.is_public;
-    try {
-      await api.toggleVisibility(cred.credential_hash, newValue);
-      // Update local state
-      setSelectedCredential((prev) =>
-        prev ? { ...prev, is_public: newValue } : prev
-      );
-      setCredentials((prev) =>
-        prev.map((c) =>
-          c.id === cred.id ? { ...c, is_public: newValue } : c
-        )
-      );
-    } catch (err) {
-      console.error("Error toggling visibility:", err);
-    }
-  }, []);
-
-  // Share action triggered from CredentialModal's top app bar
-  const handleShare = useCallback((cred) => {
-    setCredentialToShare(cred);
-  }, []);
-
   const emitted = stats ? stats.issued + stats.claimed : 0;
   const pending = stats ? stats.pending : 0;
 
   return (
-    <div className="dashboard-container">
+    <div className="dash-page">
       <Header />
-      <div className="dashboard-header">
-        <h1>Bienvenido, {user?.full_name || "Alumno"}</h1>
-        <h3>Gestiona y comparte tus logros académicos de forma segura.</h3>
-        <hr className="header-divider" />
-      </div>
 
-      {loading ? (
-        <div className="dashboard-loading">
-          <p>Cargando credenciales...</p>
-        </div>
-      ) : error ? (
-        <div className="dashboard-error">
-          <p>{error}</p>
-        </div>
-      ) : (
-        <>
-          <div className="starcard-container">
-            <StartCard number={emitted} label="Credenciales Emitidas" />
-            <StartCard number={pending} label="Pendientes de Aceptación" color="orange" />
+      <main className="dash-main">
+        {/* ── Hero Section ── */}
+        <section className="dash-hero">
+          <h1 className="dash-hero__title">
+            Bienvenido, {user?.full_name?.split(' ')[0] || 'Alumno'}
+          </h1>
+          <p className="dash-hero__subtitle">
+            Gestiona y comparte tus logros académicos
+          </p>
+        </section>
+
+        {loading ? (
+          <div className="dash-loading">
+            <p>Cargando credenciales…</p>
           </div>
-
-          <h4 className="credentialcard-title">Mis Microcredenciales</h4>
-
-          {credentials.length === 0 ? (
-            <div className="dashboard-empty">
-              <p>Aún no tienes credenciales emitidas. Completa cursos en Moodle para obtenerlas.</p>
+        ) : error ? (
+          <div className="dash-error">
+            <p>{error}</p>
+          </div>
+        ) : (
+          /* ── Bento Grid Layout ── */
+          <div className="dash-bento">
+            {/* ── Left: Stats ── */}
+            <div className="dash-bento__stats">
+              <div className="dash-stat-card">
+                <span className="dash-stat-card__icon">🏆</span>
+                <h2 className="dash-stat-card__number">{emitted}</h2>
+                <p className="dash-stat-card__label">Credenciales Emitidas</p>
+              </div>
+              {pending > 0 && (
+                <div className="dash-stat-card dash-stat-card--warning">
+                  <span className="dash-stat-card__icon">⏳</span>
+                  <h2 className="dash-stat-card__number">{pending}</h2>
+                  <p className="dash-stat-card__label">Pendientes</p>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="credentialcard-container">
-              {credentials.map((cred) => (
-                <CredentialCard
-                  key={cred.id}
-                  title={cred.course_name}
-                  issuer="UTN-FRT"
-                  issueDate={formatDate(cred.completion_date)}
-                  status={STATUS_LABELS[cred.status] || cred.status}
-                  isPublic={cred.is_public}
-                  isAnchored={cred.status === "claimed" || cred.status === "issued"}
-                  onViewDetails={() => handleViewDetails(cred)}
-                  onShare={() => setCredentialToShare(cred)}
-                />
-              ))}
+
+            {/* ── Right: Credentials ── */}
+            <div className="dash-bento__credentials">
+              <div className="dash-section-header">
+                <h2 className="dash-section-header__title">Mis Microcredenciales</h2>
+              </div>
+
+              {credentials.length === 0 ? (
+                <div className="dash-empty-grid">
+                  <div className="dash-empty-card">
+                    <span className="dash-empty-card__icon">+</span>
+                    <p className="dash-empty-card__text">
+                      Próximos logros aparecerán aquí
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="dash-credentials-grid">
+                  {credentials.map((cred) => (
+                    <CredentialCard
+                      key={cred.id}
+                      title={cred.course_name}
+                      issuer="UTN-FRT"
+                      issueDate={formatDate(cred.completion_date)}
+                      status={STATUS_LABELS[cred.status] || cred.status}
+                      isPublic={cred.is_public}
+                      isAnchored={cred.status === 'claimed' || cred.status === 'issued'}
+                      onViewDetails={() => navigate(`/alumno/credencial/${cred.id}`)}
+                      onShare={() => setCredentialToShare(cred)}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </>
-      )}
+          </div>
+        )}
+      </main>
 
       <Footer />
 
-      {loadingDetail && (
-        <div className="modal-overlay">
-          <p style={{ color: 'var(--md-sys-color-inverse-on-surface)', font: 'var(--md-sys-typescale-body-large)' }}>
-            Cargando detalle...
-          </p>
-        </div>
-      )}
-
-      <CredentialModal
-        credential={selectedCredential}
-        onClose={() => setSelectedCredential(null)}
-        onToggleVisibility={handleToggleVisibility}
-        onShare={handleShare}
-      />
       <ShareModal
         credential={credentialToShare}
         onClose={() => setCredentialToShare(null)}

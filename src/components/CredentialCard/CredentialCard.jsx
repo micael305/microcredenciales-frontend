@@ -1,18 +1,11 @@
-import { MdShare, MdOpenInNew, MdVerified, MdPublic } from 'react-icons/md';
+import { MdShare, MdSchool, MdAccountBalance, MdCalendarToday } from 'react-icons/md';
 import './credentialCard.css';
 
 /**
- * MD3 Outlined Card for displaying a credential summary.
+ * MD3 Outlined Card for credential summary.
  *
- * Props:
- *   title      – Course name
- *   issuer     – Issuing institution label
- *   issueDate  – Formatted date string
- *   status     – Localized status label (Emitida, Guardada, Pendiente)
- *   isPublic   – Whether the credential is publicly verifiable
- *   isAnchored – Whether the credential is anchored on-chain
- *   onViewDetails – Click handler for the detail action
- *   onShare       – Click handler for the share action
+ * Follows mockup: icon top-left, status badge top-right,
+ * course info in body, solid primary "Ver Detalles" button in footer.
  */
 function CredentialCard({
   title,
@@ -25,54 +18,54 @@ function CredentialCard({
   onShare,
 }) {
   const statusLower = status.toLowerCase();
-  let statusClass = 'status-badge--active';
-  if (statusLower === 'pendiente') statusClass = 'status-badge--pending';
-  else if (statusLower === 'guardada') statusClass = 'status-badge--claimed';
+  let statusClass = 'cred-badge--active';
+  let statusIcon = '✓';
+  if (statusLower === 'pendiente') {
+    statusClass = 'cred-badge--pending';
+    statusIcon = '⏳';
+  } else if (statusLower === 'guardada') {
+    statusClass = 'cred-badge--claimed';
+    statusIcon = '💾';
+  }
 
   return (
-    <article className="credential-card" id={`credential-card-${title}`}>
-      {/* ── Header: Status + Indicators + Share ── */}
-      <div className="credential-card__header">
-        <span className={`status-badge ${statusClass}`}>
+    <article className="cred-card" id={`credential-card-${title}`}>
+      {/* ── Header: Icon + Badge ── */}
+      <div className="cred-card__header">
+        <div className="cred-card__icon">
+          <MdSchool />
+        </div>
+        <span className={`cred-badge ${statusClass}`}>
+          <span className="cred-badge__icon">{statusIcon}</span>
           {status}
         </span>
-        <div className="credential-card__indicators">
-          {isAnchored && (
-            <span className="credential-card__indicator credential-card__indicator--blockchain" title="Verificada en Blockchain">
-              <MdVerified />
-            </span>
-          )}
-          {isPublic && (
-            <span className="credential-card__indicator credential-card__indicator--public" title="Verificación pública activa">
-              <MdPublic />
-            </span>
-          )}
-          <button
-            className="credential-card__action-btn"
-            title="Compartir credencial"
-            onClick={onShare}
-            aria-label="Compartir credencial"
-          >
-            <MdShare />
-          </button>
-        </div>
       </div>
 
       {/* ── Body ── */}
-      <div className="credential-card__body">
-        <h3 className="credential-card__title">{title}</h3>
-        <p className="credential-card__issuer">{issuer}</p>
-        <p className="credential-card__date">
-          <span className="credential-card__date-label">Emisión: </span>
-          {issueDate}
+      <div className="cred-card__body">
+        <h3 className="cred-card__title">{title}</h3>
+        <p className="cred-card__meta">
+          <MdAccountBalance className="cred-card__meta-icon" />
+          {issuer}
+        </p>
+        <p className="cred-card__meta">
+          <MdCalendarToday className="cred-card__meta-icon" />
+          Emitida: {issueDate}
         </p>
       </div>
 
       {/* ── Footer ── */}
-      <div className="credential-card__footer">
-        <button className="credential-card__link" onClick={onViewDetails}>
-          Ver Detalle
-          <MdOpenInNew style={{ marginLeft: '4px', fontSize: '0.85em' }} />
+      <div className="cred-card__footer">
+        <button className="cred-card__btn-primary" onClick={onViewDetails}>
+          Ver Detalles
+        </button>
+        <button
+          className="cred-card__btn-icon"
+          onClick={onShare}
+          aria-label="Compartir credencial"
+          title="Compartir"
+        >
+          <MdShare />
         </button>
       </div>
     </article>

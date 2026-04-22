@@ -3,15 +3,16 @@ import { useEffect, useState } from 'react'
 import { useAuth } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 
-// Vistas de autenticacion
+// Auth views
 import Login from './pages/auth/Login.jsx'
 import SetPassword from './pages/auth/SetPassword.jsx'
 import Home from './pages/auth/Home.jsx'
 
-// Vistas de alumno
+// Student views
 import Dashboard from './pages/alumno/Dashboard.jsx'
+import CredentialDetail from './pages/alumno/CredentialDetail/CredentialDetail.jsx'
 
-// Vista de verificacion publica
+// Public verification
 import VerificacionPublica from './pages/VerificacionPublica/VerificacionPublica.jsx'
 
 // Not Found
@@ -40,7 +41,7 @@ function MoodleCallback() {
 
   if (error) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', color: 'var(--color-text-main)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', color: 'var(--md-sys-color-on-surface)' }}>
         <p style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>{error}</p>
         <button onClick={() => navigate('/login')} style={{ padding: '0.5rem 1.5rem', cursor: 'pointer' }}>
           Ir al Login
@@ -50,7 +51,7 @@ function MoodleCallback() {
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'var(--color-text-body)' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'var(--md-sys-color-on-surface-variant)' }}>
       <p style={{ fontSize: '1.1rem' }}>Autenticando desde Moodle...</p>
     </div>
   );
@@ -63,6 +64,7 @@ function App() {
       <Route path='/login' element={<Login />} />
       <Route path='/auth/moodle-callback' element={<MoodleCallback />} />
       <Route path='/alumno' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path='/alumno/credencial/:id' element={<ProtectedRoute><CredentialDetail /></ProtectedRoute>} />
       <Route path='/configurar-password' element={<ProtectedRoute><SetPassword /></ProtectedRoute>} />
       <Route path='/verificar' element={<VerificacionPublica />} />
       <Route path='/verificar/:hash' element={<VerificacionPublica />} />
