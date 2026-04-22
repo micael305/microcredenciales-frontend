@@ -4,13 +4,10 @@ import {
   MdShare,
   MdContentCopy,
   MdOpenInNew,
-  MdSchool,
-  MdAccountBalance,
-  MdCalendarToday,
-  MdGrade,
+  MdVerified,
+  MdCheckCircle,
   MdPublic,
   MdLock,
-  MdVerified,
 } from 'react-icons/md';
 import {
   getBlockchainStatusLabel,
@@ -24,21 +21,15 @@ function formatDate(isoString) {
   if (!isoString) return '—';
   return new Date(isoString).toLocaleDateString('es-AR', {
     day: '2-digit',
-    month: '2-digit',
+    month: 'short',
     year: 'numeric',
   });
 }
 
 function truncateHash(hash) {
-  if (!hash || hash.length <= 20) return hash || '';
-  return `${hash.slice(0, 10)}…${hash.slice(-8)}`;
+  if (!hash || hash.length <= 24) return hash || '';
+  return `${hash.slice(0, 14)}…${hash.slice(-12)}`;
 }
-
-const STATUS_LABELS = {
-  issued: 'Emitida',
-  claimed: 'Guardada',
-  pending: 'Pendiente',
-};
 
 /* ── Component ── */
 
@@ -59,218 +50,199 @@ function CredentialModal({
 
   if (!credential) return null;
 
-  const displayStatus = STATUS_LABELS[credential.status] || credential.status;
   const bc = credential.blockchain;
   const bcVariant = bc ? getBlockchainStatusVariant(bc.status) : null;
   const isVerified = bcVariant === 'success';
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="cm-scrim" onClick={onClose}>
       <div
         className="cm-dialog"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="cm-title"
+        aria-labelledby="cm-dialog-title"
       >
-        {/* ── Header ── */}
-        <header className="cm-header">
-          <div className="cm-header__left">
-            <button className="cm-header__close" onClick={onClose} aria-label="Cerrar">
-              <MdClose />
-            </button>
-            <h2 className="cm-header__title" id="cm-title">Detalle de Credencial</h2>
+        {/* ── Dialog Header ── */}
+        <header className="cm-dialog-header">
+          <div className="cm-dialog-header__left">
+            <div className="cm-dialog-header__icon-circle">
+              <span className="cm-dialog-header__icon">🎖</span>
+            </div>
+            <div className="cm-dialog-header__text">
+              <h2 className="cm-dialog-header__title" id="cm-dialog-title">
+                {credential.course_name}
+              </h2>
+              <p className="cm-dialog-header__subtitle">
+                <MdVerified className="cm-dialog-header__verified" />
+                Emitido por UTN FRT
+              </p>
+            </div>
           </div>
-          <div className="cm-header__actions">
-            {onShare && (
-              <button
-                className="cm-header__action"
-                onClick={() => onShare(credential)}
-                aria-label="Compartir"
-                title="Compartir"
-              >
-                <MdShare />
-              </button>
-            )}
-          </div>
+          <button className="cm-dialog-header__close" onClick={onClose} aria-label="Cerrar">
+            <MdClose />
+          </button>
         </header>
 
-        {/* ── Body ── */}
-        <div className="cm-body">
-          {/* ── Hero ── */}
-          <div className="cm-hero">
-            <div className="cm-hero__icon">
-              <MdSchool />
+        {/* ── Dialog Content ── */}
+        <div className="cm-dialog-content">
+          {/* Status & Date */}
+          <div className="cm-status-row">
+            {isVerified && (
+              <span className="cm-chip cm-chip--valid">
+                <MdCheckCircle className="cm-chip__icon" />
+                Válida
+              </span>
+            )}
+            <span className="cm-status-date">
+              Otorgada el {formatDate(credential.completion_date)}
+            </span>
+          </div>
+
+          {/* Academic Details Table */}
+          <section className="cm-section">
+            <h3 className="cm-section__heading">Detalles Académicos</h3>
+            <div className="cm-table">
+              {credential.student_name && (
+                <div className="cm-table__row">
+                  <span className="cm-table__label">Estudiante</span>
+                  <span className="cm-table__value">{credential.student_name}</span>
+                </div>
+              )}
+              <div className="cm-table__row cm-table__row--alt">
+                <span className="cm-table__label">Institución</span>
+                <span className="cm-table__value">UTN — Facultad Regional Tucumán</span>
+              </div>
+              {credential.grade && (
+                <div className="cm-table__row">
+                  <span className="cm-table__label">Calificación</span>
+                  <span className="cm-table__value">{credential.grade}</span>
+                </div>
+              )}
+              <div className={`cm-table__row ${credential.grade ? 'cm-table__row--alt' : ''}`}>
+                <span className="cm-table__label">Estado</span>
+                <span className="cm-table__value">{credential.status === 'claimed' ? 'Guardada' : credential.status === 'issued' ? 'Emitida' : credential.status}</span>
+              </div>
             </div>
-            <div className="cm-hero__info">
-              <div className="cm-hero__badges">
-                {isVerified && (
-                  <span className="cm-badge-verified">
-                    <MdVerified className="cm-badge-verified__icon" />
-                    Verificada
-                  </span>
+          </section>
+
+          {/* Visibility Toggle */}
+          {onToggleVisibility && (
+            <section className="cm-visibility">
+              <div className="cm-visibility__left">
+                {credential.is_public ? (
+                  <MdPublic className="cm-visibility__icon cm-visibility__icon--public" />
+                ) : (
+                  <MdLock className="cm-visibility__icon" />
                 )}
-                <span className={`cm-badge-status cm-badge-status--${credential.status}`}>
-                  {displayStatus}
+                <div>
+                  <span className="cm-visibility__label">
+                    Verificación {credential.is_public ? 'Pública' : 'Privada'}
+                  </span>
+                  <span className="cm-visibility__desc">
+                    {credential.is_public
+                      ? 'Terceros pueden verificar esta credencial con el enlace público.'
+                      : 'Solo tú puedes ver esta credencial.'}
+                  </span>
+                </div>
+              </div>
+              <button
+                role="switch"
+                aria-checked={credential.is_public}
+                className={`cm-switch ${credential.is_public ? 'cm-switch--on' : ''}`}
+                onClick={() => onToggleVisibility(credential)}
+              >
+                <span className="cm-switch__track">
+                  <span className="cm-switch__thumb" />
                 </span>
-              </div>
-              <h3 className="cm-hero__title">{credential.course_name}</h3>
-              <p className="cm-hero__subtitle">UTN — Facultad Regional Tucumán</p>
-            </div>
-          </div>
-
-          {/* ── Two Column Content ── */}
-          <div className="cm-columns">
-            {/* Left: Academic + Privacy */}
-            <div className="cm-col">
-              <div className="cm-section">
-                <h4 className="cm-section__title">Información Académica</h4>
-                <ul className="cm-list">
-                  {credential.student_name && (
-                    <li className="cm-list__item">
-                      <MdSchool className="cm-list__icon" />
-                      <span className="cm-list__label">Alumno</span>
-                      <span className="cm-list__value">{credential.student_name}</span>
-                    </li>
-                  )}
-                  <li className="cm-list__item">
-                    <MdAccountBalance className="cm-list__icon" />
-                    <span className="cm-list__label">Emisor</span>
-                    <span className="cm-list__value">UTN — FRT</span>
-                  </li>
-                  <li className="cm-list__item">
-                    <MdCalendarToday className="cm-list__icon" />
-                    <span className="cm-list__label">Emisión</span>
-                    <span className="cm-list__value">{formatDate(credential.completion_date)}</span>
-                  </li>
-                  {credential.grade && (
-                    <li className="cm-list__item">
-                      <MdGrade className="cm-list__icon" />
-                      <span className="cm-list__label">Calificación</span>
-                      <span className="cm-list__value">{credential.grade}</span>
-                    </li>
-                  )}
-                </ul>
-              </div>
-
-              {/* Privacy Switch */}
-              {onToggleVisibility && (
-                <div className="cm-privacy">
-                  <div className="cm-privacy__left">
-                    {credential.is_public ? (
-                      <MdPublic className="cm-privacy__icon cm-privacy__icon--public" />
-                    ) : (
-                      <MdLock className="cm-privacy__icon" />
-                    )}
-                    <div className="cm-privacy__text">
-                      <span className="cm-privacy__label">
-                        {credential.is_public ? 'Pública' : 'Privada'}
-                      </span>
-                      <span className="cm-privacy__desc">
-                        {credential.is_public
-                          ? 'Verificable por terceros'
-                          : 'Solo visible para ti'}
-                      </span>
-                    </div>
-                  </div>
-                  <button
-                    role="switch"
-                    aria-checked={credential.is_public}
-                    className={`cm-switch ${credential.is_public ? 'cm-switch--on' : ''}`}
-                    onClick={() => onToggleVisibility(credential)}
-                  >
-                    <span className="cm-switch__track">
-                      <span className="cm-switch__thumb" />
-                    </span>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Right: Blockchain */}
-            <div className="cm-col">
-              {bc ? (
-                <div className="cm-section">
-                  <h4 className="cm-section__title">Blockchain</h4>
-                  <div className="cm-bc">
-                    <span className={`cm-bc__badge cm-bc__badge--${bcVariant}`}>
-                      {getBlockchainStatusLabel(bc.status)}
-                    </span>
-
-                    <div className="cm-bc__details">
-                      <div className="cm-bc__row">
-                        <span className="cm-bc__label">Red</span>
-                        <span className="cm-bc__value">{bc.network}</span>
-                      </div>
-                      {bc.ledger_timestamp && (
-                        <div className="cm-bc__row">
-                          <span className="cm-bc__label">Timestamp</span>
-                          <span className="cm-bc__value">{formatDate(bc.ledger_timestamp)}</span>
-                        </div>
-                      )}
-                      {bc.issuer_did && (
-                        <div className="cm-bc__row">
-                          <span className="cm-bc__label">DID Emisor</span>
-                          <span className="cm-bc__value cm-mono">{truncateHash(bc.issuer_did)}</span>
-                        </div>
-                      )}
-                      {bc.txn_id && (
-                        <div className="cm-bc__row">
-                          <span className="cm-bc__label">Tx Hash</span>
-                          <div className="cm-bc__copyable">
-                            <span className="cm-bc__value cm-mono">{truncateHash(bc.txn_id)}</span>
-                            <button
-                              className="cm-copy-btn"
-                              onClick={() => copyToClipboard(bc.txn_id, setTxCopied)}
-                              title={txCopied ? 'Copiado' : 'Copiar'}
-                            >
-                              <MdContentCopy />
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {bc.explorer_url && (
-                      <a
-                        href={bc.explorer_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="cm-explorer-link"
-                      >
-                        <MdOpenInNew />
-                        Ver en Explorer
-                      </a>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="cm-section">
-                  <h4 className="cm-section__title">Blockchain</h4>
-                  <p className="cm-empty-text">Sin datos de blockchain disponibles.</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* ── Hash Footer ── */}
-          {credential.credential_hash && (
-            <div className="cm-hash">
-              <span className="cm-hash__label">Huella Digital (SHA-256)</span>
-              <div className="cm-hash__row">
-                <code className="cm-hash__code">{credential.credential_hash}</code>
-                <button
-                  className="cm-copy-btn"
-                  onClick={() => copyToClipboard(credential.credential_hash, setHashCopied)}
-                  title={hashCopied ? 'Copiado' : 'Copiar hash'}
-                >
-                  <MdContentCopy />
-                  <span className="cm-copy-btn__text">{hashCopied ? 'Copiado' : 'Copiar'}</span>
-                </button>
-              </div>
-            </div>
+              </button>
+            </section>
           )}
+
+          {/* Blockchain Verification */}
+          <section className="cm-section">
+            <h3 className="cm-section__heading cm-section__heading--icon">
+              <MdLock className="cm-section__heading-icon" />
+              Verificación Blockchain
+            </h3>
+
+            {bc ? (
+              <div className="cm-blockchain-card">
+                {/* Hash */}
+                {credential.credential_hash && (
+                  <div className="cm-hash-block">
+                    <span className="cm-hash-block__label">Credential Hash (SHA-256)</span>
+                    <div className="cm-hash-block__row">
+                      <code className="cm-hash-block__code">{truncateHash(credential.credential_hash)}</code>
+                      <button
+                        className="cm-hash-block__copy"
+                        onClick={() => copyToClipboard(credential.credential_hash, setHashCopied)}
+                        title={hashCopied ? 'Copiado' : 'Copiar Hash'}
+                      >
+                        <MdContentCopy />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {bc.txn_id && (
+                  <div className="cm-hash-block">
+                    <span className="cm-hash-block__label">Transaction Hash</span>
+                    <div className="cm-hash-block__row">
+                      <code className="cm-hash-block__code">{truncateHash(bc.txn_id)}</code>
+                      <button
+                        className="cm-hash-block__copy"
+                        onClick={() => copyToClipboard(bc.txn_id, setTxCopied)}
+                        title={txCopied ? 'Copiado' : 'Copiar Hash'}
+                      >
+                        <MdContentCopy />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Network + Explorer */}
+                <div className="cm-blockchain-footer">
+                  <div className="cm-blockchain-footer__network">
+                    <span className="cm-blockchain-footer__network-label">Red {bc.network}</span>
+                  </div>
+                  {bc.explorer_url && (
+                    <a
+                      href={bc.explorer_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cm-blockchain-footer__explorer"
+                    >
+                      Ver en explorador
+                      <MdOpenInNew className="cm-blockchain-footer__explorer-icon" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <p className="cm-empty-text">Sin datos de blockchain disponibles.</p>
+            )}
+          </section>
         </div>
+
+        {/* ── Dialog Actions ── */}
+        <footer className="cm-dialog-actions">
+          <button
+            className="cm-action-btn cm-action-btn--outlined"
+            onClick={onClose}
+          >
+            Cerrar
+          </button>
+          {onShare && (
+            <button
+              className="cm-action-btn cm-action-btn--filled"
+              onClick={() => onShare(credential)}
+            >
+              <MdShare className="cm-action-btn__icon" />
+              Compartir
+            </button>
+          )}
+        </footer>
       </div>
     </div>
   );
