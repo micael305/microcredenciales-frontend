@@ -1,40 +1,37 @@
+/* =================================================================
+ * VerificacionPublica — MD3 Public Verification Page
+ *
+ * Desktop: 2-column result (credential data + blockchain evidence)
+ * Mobile:  single column, full width
+ * ================================================================= */
+
+/* ── Page Layout ── */
 .verificacion-page {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
 .verificacion-container {
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 6rem 24px 40px;
-  gap: 16px;
-  max-width: 640px;
-  margin: 0 auto;
+  gap: 20px;
+  padding: 24px;
+  max-width: 800px;
   width: 100%;
+  margin: 5rem auto 0 auto;
 }
 
-/* ── MD3 Outlined Card ── */
+/* ── Card ── */
 .verificacion-card {
   background-color: var(--md-sys-color-surface-container-lowest);
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: var(--md-sys-shape-corner-large);
-  padding: 32px;
-  width: 100%;
-  text-align: center;
+  padding: 28px;
 }
 
-.verificacion-icon {
-  font-size: 2.5rem;
-  margin-bottom: 8px;
-}
-
-.verificacion-icon--error {
-  color: var(--md-sys-color-error);
-}
-
+/* ── Typography ── */
 .verificacion-title {
   font: var(--md-sys-typescale-headline-medium);
   color: var(--md-sys-color-on-surface);
@@ -44,43 +41,40 @@
 .verificacion-text {
   font: var(--md-sys-typescale-body-large);
   color: var(--md-sys-color-on-surface-variant);
-  margin-bottom: 20px;
+  margin: 0 0 20px 0;
 }
 
 /* ── Search Form ── */
 .verificacion-search-form {
   display: flex;
   gap: 8px;
-  margin-top: 8px;
 }
 
 .verificacion-search-input {
   flex: 1;
   padding: 12px 16px;
-  border: 1px solid var(--md-sys-color-outline);
+  border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: var(--md-sys-shape-corner-small);
-  font: var(--md-sys-typescale-body-medium);
+  font: var(--md-sys-typescale-body-large);
   font-family: 'Roboto Mono', monospace;
   color: var(--md-sys-color-on-surface);
-  background-color: var(--md-sys-color-surface-container-lowest);
+  background-color: var(--md-sys-color-surface-container-low);
   outline: none;
   transition: border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .verificacion-search-input:focus {
   border-color: var(--md-sys-color-primary);
-  border-width: 2px;
-  padding: 11px 15px; /* compensate 2px border */
 }
 
 .verificacion-search-btn {
   padding: 12px 24px;
+  border: none;
+  border-radius: var(--md-sys-shape-corner-full);
   background-color: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
-  border: none;
-  border-radius: var(--md-sys-shape-corner-small);
-  cursor: pointer;
   font: var(--md-sys-typescale-label-large);
+  cursor: pointer;
   white-space: nowrap;
   transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
@@ -90,36 +84,60 @@
 }
 
 .verificacion-search-btn:disabled {
-  background-color: var(--md-sys-color-surface-container-highest);
-  color: var(--md-sys-color-on-surface-variant);
-  cursor: not-allowed;
-  opacity: 1;
+  opacity: 0.5;
+  cursor: default;
 }
 
-/* ── Data Rows ── */
+/* ── Status Icon ── */
+.verificacion-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--md-sys-shape-corner-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  background-color: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+}
+
+.verificacion-icon--error {
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+}
+
+/* ── 2-Column Result Layout ── */
+.verificacion-result-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+/* ── Data Details ── */
 .verificacion-details {
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .verificacion-data {
-  background-color: var(--md-sys-color-surface-container-low);
-  padding: 14px;
-  border-radius: var(--md-sys-shape-corner-small);
-  margin-bottom: 8px;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
 .verificacion-label {
-  font: var(--md-sys-typescale-label-medium);
+  font: var(--md-sys-typescale-label-small);
   color: var(--md-sys-color-on-surface-variant);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .verificacion-value {
-  font: var(--md-sys-typescale-body-large);
+  font: var(--md-sys-typescale-body-medium);
   color: var(--md-sys-color-on-surface);
 }
 
@@ -129,12 +147,18 @@
   word-break: break-all;
 }
 
-/* ── Blockchain badge ── */
+/* ── Blockchain Badge ── */
+.verificacion-bc-badge-row {
+  display: flex;
+  margin-bottom: 4px;
+}
+
 .verificacion-status-badge {
   font: var(--md-sys-typescale-label-large);
-  padding: 4px 12px;
-  border-radius: var(--md-sys-shape-corner-small);
-  display: inline-block;
+  padding: 6px 16px;
+  border-radius: var(--md-sys-shape-corner-full);
+  display: inline-flex;
+  align-items: center;
 }
 
 .verificacion-status-badge--success {
@@ -157,18 +181,29 @@
   color: var(--md-sys-color-on-surface-variant);
 }
 
-/* ── Explorer Link ── */
+/* ── Tx Hash Link ── */
+.verificacion-tx-link {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+}
+
+.verificacion-tx-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Explorer Link (MD3 Outlined Button) ── */
 .verificacion-explorer-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: 8px;
   font: var(--md-sys-typescale-label-large);
   color: var(--md-sys-color-primary);
   text-decoration: none;
-  padding: 8px 16px;
-  border: 1px solid var(--md-sys-color-primary);
-  border-radius: var(--md-sys-shape-corner-small);
-  margin-top: 12px;
+  padding: 10px 24px;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-full);
+  margin-top: 4px;
   transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
@@ -177,25 +212,76 @@
   text-decoration: none;
 }
 
-/* ── Tx Hash Link ── */
-.verificacion-tx-link {
-  color: var(--md-sys-color-primary);
-  text-decoration: none;
-  word-break: break-all;
-}
-
-.verificacion-tx-link:hover {
-  text-decoration: underline;
-}
-
-/* ── Description text ── */
+/* ── Description ── */
 .verificacion-description {
   font: var(--md-sys-typescale-body-medium);
   color: var(--md-sys-color-on-surface-variant);
-  margin-top: 16px;
+  margin: 20px 0 0 0;
 }
 
-@media (max-width: 500px) {
-  .verificacion-search-form { flex-direction: column; }
-  .verificacion-card { padding: 20px; }
+/* ── Hash Box ── */
+.verificacion-hash-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px;
+  margin-top: 20px;
+  background-color: var(--md-sys-color-surface-container);
+  border-radius: var(--md-sys-shape-corner-small);
+}
+
+.verificacion-hash-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.verificacion-hash-value {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--md-sys-color-on-surface);
+  word-break: break-all;
+  line-height: 1.5;
+  flex: 1;
+  min-width: 0;
+}
+
+.verificacion-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: 4px 12px;
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-primary);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+.verificacion-copy-btn:hover {
+  background-color: var(--md-sys-color-primary-container);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .verificacion-search-form {
+    flex-direction: column;
+  }
+
+  .verificacion-card {
+    padding: 20px;
+  }
+
+  .verificacion-result-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .verificacion-hash-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

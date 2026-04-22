@@ -93,6 +93,11 @@ function Dashboard() {
     }
   }, []);
 
+  // Share action triggered from CredentialModal's top app bar
+  const handleShare = useCallback((cred) => {
+    setCredentialToShare(cred);
+  }, []);
+
   const emitted = stats ? stats.issued + stats.claimed : 0;
   const pending = stats ? stats.pending : 0;
 
@@ -135,6 +140,8 @@ function Dashboard() {
                   issuer="UTN-FRT"
                   issueDate={formatDate(cred.completion_date)}
                   status={STATUS_LABELS[cred.status] || cred.status}
+                  isPublic={cred.is_public}
+                  isAnchored={cred.status === "claimed" || cred.status === "issued"}
                   onViewDetails={() => handleViewDetails(cred)}
                   onShare={() => setCredentialToShare(cred)}
                 />
@@ -158,6 +165,7 @@ function Dashboard() {
         credential={selectedCredential}
         onClose={() => setSelectedCredential(null)}
         onToggleVisibility={handleToggleVisibility}
+        onShare={handleShare}
       />
       <ShareModal
         credential={credentialToShare}

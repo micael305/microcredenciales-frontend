@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MdOpenInNew } from 'react-icons/md';
+import { MdOpenInNew, MdVerified, MdContentCopy } from 'react-icons/md';
 import * as api from '../../api/client';
 import {
   getBlockchainStatusLabel,
@@ -21,6 +21,11 @@ function formatDate(isoString) {
   });
 }
 
+function truncateHash(hash) {
+  if (!hash || hash.length <= 20) return hash || '';
+  return `${hash.slice(0, 10)}…${hash.slice(-8)}`;
+}
+
 function VerificacionPublica() {
   const { hash } = useParams();
   const navigate = useNavigate();
@@ -28,6 +33,7 @@ function VerificacionPublica() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [hashCopied, setHashCopied] = useState(false);
 
   useEffect(() => {
     if (hash) {
@@ -56,18 +62,23 @@ function VerificacionPublica() {
     navigate(`/verificar/${trimmed}`);
   };
 
-  const blockchain = result?.blockchain;
-  const blockchainVariant = blockchain ? getBlockchainStatusVariant(blockchain.status) : null;
+  const handleCopyHash = useCallback(() => {
+    if (!result?.credential_hash) return;
+    navigator.clipboard.writeText(result.credential_hash);
+    setHashCopied(true);
+    setTimeout(() => setHashCopied(false), 2000);
+  }, [result]);
+
+  const bc = result?.blockchain;
+  const bcVariant = bc ? getBlockchainStatusVariant(bc.status) : null;
 
   return (
     <div className="verificacion-page">
       <Header />
 
       <div className="verificacion-container">
-        <div
-          className="verificacion-card"
-          style={{ marginBottom: hash ? '0' : '0' }}
-        >
+        {/* ── Search Card ── */}
+        <div className="verificacion-card">
           <h2 className="verificacion-title">Verificación Pública de Credenciales</h2>
           <p className="verificacion-text">
             Ingresá el hash de una credencial para consultar su estado en el
@@ -106,117 +117,132 @@ function VerificacionPublica() {
           </div>
         )}
 
+        {/* ── Result Card ── */}
         {result && !loading && (
           <div className="verificacion-card">
             {result.valid ? (
               <>
                 <div className="verificacion-icon">✓</div>
                 <h2 className="verificacion-title">Credencial Reconocida</h2>
-                <p className="verificacion-text">
-                  Los datos coinciden con una emisión registrada por la institución.
-                </p>
 
-                <div className="verificacion-details">
-                  {result.student_name && (
-                    <div className="verificacion-data">
-                      <span className="verificacion-label">Alumno</span>
-                      <span className="verificacion-value">{result.student_name}</span>
-                    </div>
-                  )}
-                  {result.course_name && (
-                    <div className="verificacion-data">
-                      <span className="verificacion-label">Curso</span>
-                      <span className="verificacion-value">{result.course_name}</span>
-                    </div>
-                  )}
-                  {result.completion_date && (
-                    <div className="verificacion-data">
-                      <span className="verificacion-label">Fecha de Emisión</span>
-                      <span className="verificacion-value">
-                        {formatDate(result.completion_date)}
-                      </span>
-                    </div>
-                  )}
-                  {result.issuer && (
-                    <div className="verificacion-data">
-                      <span className="verificacion-label">Institución Emisora</span>
-                      <span className="verificacion-value">{result.issuer}</span>
-                    </div>
-                  )}
-
-                  {blockchain && (
-                    <>
+                {/* ── 2-Column Result Layout ── */}
+                <div className="verificacion-result-columns">
+                  {/* Left: Credential data */}
+                  <div className="verificacion-details">
+                    {result.student_name && (
                       <div className="verificacion-data">
-                        <span className="verificacion-label">Red Blockchain</span>
-                        <span className="verificacion-value">{blockchain.network}</span>
+                        <span className="verificacion-label">Alumno</span>
+                        <span className="verificacion-value">{result.student_name}</span>
                       </div>
+                    )}
+                    {result.course_name && (
                       <div className="verificacion-data">
-                        <span className="verificacion-label">Estado on-chain</span>
-                        <span className={`verificacion-status-badge verificacion-status-badge--${blockchainVariant}`}>
-                          {getBlockchainStatusLabel(blockchain.status)}
+                        <span className="verificacion-label">Curso</span>
+                        <span className="verificacion-value">{result.course_name}</span>
+                      </div>
+                    )}
+                    {result.completion_date && (
+                      <div className="verificacion-data">
+                        <span className="verificacion-label">Fecha de Emisión</span>
+                        <span className="verificacion-value">
+                          {formatDate(result.completion_date)}
                         </span>
                       </div>
-                      {blockchain.ledger_timestamp && (
+                    )}
+                    {result.issuer && (
+                      <div className="verificacion-data">
+                        <span className="verificacion-label">Institución Emisora</span>
+                        <span className="verificacion-value">{result.issuer}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right: Blockchain evidence */}
+                  {bc && (
+                    <div className="verificacion-details">
+                      <div className="verificacion-bc-badge-row">
+                        <span className={`verificacion-status-badge verificacion-status-badge--${bcVariant}`}>
+                          <MdVerified style={{ fontSize: '1rem', marginRight: '4px' }} />
+                          {getBlockchainStatusLabel(bc.status)}
+                        </span>
+                      </div>
+
+                      <div className="verificacion-data">
+                        <span className="verificacion-label">Red Blockchain</span>
+                        <span className="verificacion-value">{bc.network}</span>
+                      </div>
+                      {bc.ledger_timestamp && (
                         <div className="verificacion-data">
                           <span className="verificacion-label">Timestamp On-Chain</span>
                           <span className="verificacion-value">
-                            {formatDate(blockchain.ledger_timestamp)}
+                            {formatDate(bc.ledger_timestamp)}
                           </span>
                         </div>
                       )}
-                      {blockchain.issuer_did && (
+                      {bc.issuer_did && (
                         <div className="verificacion-data">
                           <span className="verificacion-label">DID del Emisor</span>
                           <span className="verificacion-value verificacion-hash">
-                            {blockchain.issuer_did}
+                            {truncateHash(bc.issuer_did)}
                           </span>
                         </div>
                       )}
-                      {blockchain.txn_id && (
+                      {bc.txn_id && (
                         <div className="verificacion-data">
                           <span className="verificacion-label">Transaction Hash</span>
-                          {blockchain.explorer_url ? (
+                          {bc.explorer_url ? (
                             <a
-                              href={blockchain.explorer_url}
+                              href={bc.explorer_url}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="verificacion-value verificacion-hash verificacion-tx-link"
                             >
-                              {blockchain.txn_id}
+                              {truncateHash(bc.txn_id)}
                             </a>
                           ) : (
                             <span className="verificacion-value verificacion-hash">
-                              {blockchain.txn_id}
+                              {truncateHash(bc.txn_id)}
                             </span>
                           )}
                         </div>
                       )}
-                      {blockchain.explorer_url && (
+                      {bc.explorer_url && (
                         <a
-                          href={blockchain.explorer_url}
+                          href={bc.explorer_url}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="verificacion-explorer-link"
                         >
+                          Verificar en Explorer
                           <MdOpenInNew />
-                          Verificar en Blockchain Explorer
                         </a>
                       )}
-                    </>
+                    </div>
                   )}
                 </div>
 
-                {blockchain && (
+                {bc && (
                   <p className="verificacion-description">
-                    {getBlockchainStatusDescription(blockchain.status)}
+                    {getBlockchainStatusDescription(bc.status)}
                   </p>
                 )}
 
-                <div className="verificacion-data" style={{ marginTop: '16px' }}>
-                  <span className="verificacion-label">Hash de la Credencial</span>
-                  <span className="verificacion-value verificacion-hash">
-                    {result.credential_hash}
-                  </span>
+                {/* ── Hash Box ── */}
+                <div className="verificacion-hash-box">
+                  <span className="verificacion-label">Huella Digital (SHA-256)</span>
+                  <div className="verificacion-hash-row">
+                    <code className="verificacion-hash-value">
+                      {result.credential_hash}
+                    </code>
+                    <button
+                      className="verificacion-copy-btn"
+                      onClick={handleCopyHash}
+                      aria-label="Copiar hash"
+                    >
+                      <MdContentCopy />
+                      {hashCopied ? 'Copiado' : 'Copiar'}
+                    </button>
+                  </div>
                 </div>
               </>
             ) : (
@@ -227,11 +253,11 @@ function VerificacionPublica() {
                   No se encontró ninguna credencial que corresponda al hash proporcionado.
                   Verificá que el hash sea correcto.
                 </p>
-                <div className="verificacion-data">
+                <div className="verificacion-hash-box">
                   <span className="verificacion-label">Hash Consultado</span>
-                  <span className="verificacion-value verificacion-hash">
+                  <code className="verificacion-hash-value">
                     {result.credential_hash}
-                  </span>
+                  </code>
                 </div>
               </>
             )}

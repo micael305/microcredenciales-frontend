@@ -1,16 +1,32 @@
-import { useState } from 'react';
-import { MdContentCopy, MdOpenInNew, MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { useState, useCallback } from 'react';
+import {
+  MdClose,
+  MdShare,
+  MdContentCopy,
+  MdOpenInNew,
+  MdVerified,
+  MdCalendarToday,
+  MdSchool,
+  MdGrade,
+  MdAccountBalance,
+} from 'react-icons/md';
 import { getBlockchainStatusLabel, getBlockchainStatusVariant } from '../../utils/blockchain';
 import './credentialModal.css';
 
+/* ── Helpers ── */
+
 function formatDate(isoString) {
   if (!isoString) return '—';
-  const date = new Date(isoString);
-  return date.toLocaleDateString('es-AR', {
+  return new Date(isoString).toLocaleDateString('es-AR', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
   });
+}
+
+function truncateHash(hash) {
+  if (!hash || hash.length <= 20) return hash || '';
+  return `${hash.slice(0, 10)}…${hash.slice(-8)}`;
 }
 
 const STATUS_LABELS = {
@@ -19,174 +35,241 @@ const STATUS_LABELS = {
   pending: 'Pendiente',
 };
 
-/**
- * Truncate a hex hash for display: first 10 + last 8 chars.
- * @param {string} hash
- * @returns {string}
- */
-function truncateHash(hash) {
-  if (!hash || hash.length <= 20) return hash || '';
-  return `${hash.slice(0, 10)}…${hash.slice(-8)}`;
-}
+/* ── Component ── */
 
-function CredentialModal({ credential, onClose, onToggleVisibility }) {
+function CredentialModal({
+  credential,
+  onClose,
+  onToggleVisibility,
+  onShare,
+}) {
   const [hashCopied, setHashCopied] = useState(false);
   const [txCopied, setTxCopied] = useState(false);
+
+  const copyToClipboard = useCallback((text, setter) => {
+    navigator.clipboard.writeText(text);
+    setter(true);
+    setTimeout(() => setter(false), 2000);
+  }, []);
 
   if (!credential) return null;
 
   const displayStatus = STATUS_LABELS[credential.status] || credential.status;
-  const blockchain = credential.blockchain;
-  const blockchainVariant = blockchain ? getBlockchainStatusVariant(blockchain.status) : null;
-
-  const handleCopyHash = () => {
-    if (!credential.credential_hash) return;
-    navigator.clipboard.writeText(credential.credential_hash);
-    setHashCopied(true);
-    setTimeout(() => setHashCopied(false), 2000);
-  };
-
-  const handleCopyTx = () => {
-    if (!blockchain?.txn_id) return;
-    navigator.clipboard.writeText(blockchain.txn_id);
-    setTxCopied(true);
-    setTimeout(() => setTxCopied(false), 2000);
-  };
+  const bc = credential.blockchain;
+  const bcVariant = bc ? getBlockchainStatusVariant(bc.status) : null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-top-bar">
-          <button className="modal-close-btn" onClick={onClose} aria-label="Cerrar detalle">
-            ← Volver
+      <div
+        className="detail-dialog"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="detail-dialog-title"
+      >
+        {/* ── Top App Bar ── */}
+        <header className="detail-appbar">
+          <button
+            className="detail-appbar__close"
+            onClick={onClose}
+            aria-label="Cerrar"
+          >
+            <MdClose />
           </button>
-          {onToggleVisibility && (
-            <button
-              className="modal-visibility-btn"
-              onClick={() => onToggleVisibility(credential)}
-              title={credential.is_public ? 'Hacer privada' : 'Hacer pública'}
-              aria-label={credential.is_public ? 'Hacer privada' : 'Hacer pública'}
-            >
-              {credential.is_public ? <MdVisibility /> : <MdVisibilityOff />}
-              <span>{credential.is_public ? 'Pública' : 'Privada'}</span>
-            </button>
-          )}
-        </div>
-
-        <h2 className="modal-title">{credential.course_name}</h2>
-
-        <div className="modal-grid">
-          <div className="modal-grid-item">
-            <span className="modal-label">Institución Emisora</span>
-            <span className="modal-value">UTN — Facultad Regional Tucumán</span>
-          </div>
-          {credential.student_name && (
-            <div className="modal-grid-item">
-              <span className="modal-label">Alumno</span>
-              <span className="modal-value">{credential.student_name}</span>
-            </div>
-          )}
-          <div className="modal-grid-item">
-            <span className="modal-label">Fecha de Emisión</span>
-            <span className="modal-value">{formatDate(credential.completion_date)}</span>
-          </div>
-          <div className="modal-grid-item">
-            <span className="modal-label">Estado</span>
-            <span className="modal-value">{displayStatus}</span>
-          </div>
-          {credential.grade && (
-            <div className="modal-grid-item">
-              <span className="modal-label">Calificación</span>
-              <span className="modal-value">{credential.grade}</span>
-            </div>
-          )}
-        </div>
-
-        {/* ── Blockchain Evidence Section ── */}
-        {blockchain && (
-          <div className="modal-blockchain-section">
-            <h3 className="modal-section-title">Evidencia Blockchain</h3>
-            <div className="modal-grid">
-              <div className="modal-grid-item">
-                <span className="modal-label">Red</span>
-                <span className="modal-value">{blockchain.network}</span>
-              </div>
-              <div className="modal-grid-item">
-                <span className="modal-label">Estado on-chain</span>
-                <span className={`modal-blockchain-badge modal-blockchain-badge--${blockchainVariant}`}>
-                  {getBlockchainStatusLabel(blockchain.status)}
-                </span>
-              </div>
-              {blockchain.issuer_did && (
-                <div className="modal-grid-item modal-grid-item--full">
-                  <span className="modal-label">DID del Emisor</span>
-                  <span className="modal-value modal-mono">{blockchain.issuer_did}</span>
-                </div>
-              )}
-              {blockchain.ledger_timestamp && (
-                <div className="modal-grid-item">
-                  <span className="modal-label">Timestamp On-Chain</span>
-                  <span className="modal-value">{formatDate(blockchain.ledger_timestamp)}</span>
-                </div>
-              )}
-              {blockchain.txn_id && (
-                <div className="modal-grid-item modal-grid-item--full">
-                  <span className="modal-label">Transaction Hash</span>
-                  <div className="modal-hash-row">
-                    <span className="modal-value modal-mono modal-hash-text">
-                      {truncateHash(blockchain.txn_id)}
-                    </span>
-                    <button
-                      className="modal-copy-btn"
-                      onClick={handleCopyTx}
-                      title="Copiar transaction hash"
-                      aria-label="Copiar transaction hash"
-                    >
-                      <MdContentCopy />
-                      {txCopied ? 'Copiado' : 'Copiar'}
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-            {blockchain.explorer_url && (
-              <a
-                href={blockchain.explorer_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="modal-explorer-link"
+          <h2 className="detail-appbar__title" id="detail-dialog-title">
+            Detalle de Credencial
+          </h2>
+          <div className="detail-appbar__actions">
+            {onShare && (
+              <button
+                className="detail-appbar__action"
+                onClick={() => onShare(credential)}
+                aria-label="Compartir"
+                title="Compartir"
               >
-                <MdOpenInNew />
-                Verificar en Blockchain Explorer
-              </a>
+                <MdShare />
+              </button>
             )}
           </div>
-        )}
+        </header>
 
-        {/* ── Hash Section ── */}
-        {credential.credential_hash && (
-          <div className="modal-hash-box">
-            <span className="modal-label">Hash de la Credencial (SHA-256)</span>
-            <p className="modal-hash-help">
-              Este hash identifica de forma única a esta credencial. Es el mismo valor registrado
-              en la blockchain — puede verificarlo en el Explorer.
+        {/* ── Scrollable Content ── */}
+        <div className="detail-body">
+          {/* ── Hero Section ── */}
+          <div className="detail-hero">
+            <h3 className="detail-hero__title">{credential.course_name}</h3>
+            <p className="detail-hero__subtitle">
+              UTN — Facultad Regional Tucumán
             </p>
-            <div className="modal-hash-row">
-              <span className="modal-value modal-mono modal-hash-text">
-                {credential.credential_hash}
-              </span>
+            <span className={`detail-status-chip detail-status-chip--${credential.status}`}>
+              {displayStatus}
+            </span>
+          </div>
+
+          {/* ── 2-Column Content Area ── */}
+          <div className="detail-columns">
+            {/* ── Left: Credential Info ── */}
+            <section className="detail-section">
+              <h4 className="detail-section__title">Información</h4>
+
+              <ul className="detail-list">
+                {credential.student_name && (
+                  <li className="detail-list__item">
+                    <MdSchool className="detail-list__icon" />
+                    <div className="detail-list__text">
+                      <span className="detail-list__overline">Alumno</span>
+                      <span className="detail-list__headline">{credential.student_name}</span>
+                    </div>
+                  </li>
+                )}
+                <li className="detail-list__item">
+                  <MdAccountBalance className="detail-list__icon" />
+                  <div className="detail-list__text">
+                    <span className="detail-list__overline">Institución Emisora</span>
+                    <span className="detail-list__headline">UTN — FRT</span>
+                  </div>
+                </li>
+                <li className="detail-list__item">
+                  <MdCalendarToday className="detail-list__icon" />
+                  <div className="detail-list__text">
+                    <span className="detail-list__overline">Fecha de Emisión</span>
+                    <span className="detail-list__headline">
+                      {formatDate(credential.completion_date)}
+                    </span>
+                  </div>
+                </li>
+                {credential.grade && (
+                  <li className="detail-list__item">
+                    <MdGrade className="detail-list__icon" />
+                    <div className="detail-list__text">
+                      <span className="detail-list__overline">Calificación</span>
+                      <span className="detail-list__headline">{credential.grade}</span>
+                    </div>
+                  </li>
+                )}
+              </ul>
+            </section>
+
+            {/* ── Right: Blockchain Evidence ── */}
+            {bc && (
+              <section className="detail-section">
+                <h4 className="detail-section__title">Verificación Blockchain</h4>
+
+                <div className="detail-bc-status">
+                  <span className={`detail-bc-badge detail-bc-badge--${bcVariant}`}>
+                    <MdVerified className="detail-bc-badge__icon" />
+                    {getBlockchainStatusLabel(bc.status)}
+                  </span>
+                </div>
+
+                <ul className="detail-list">
+                  <li className="detail-list__item">
+                    <div className="detail-list__text">
+                      <span className="detail-list__overline">Red</span>
+                      <span className="detail-list__headline">{bc.network}</span>
+                    </div>
+                  </li>
+                  {bc.ledger_timestamp && (
+                    <li className="detail-list__item">
+                      <div className="detail-list__text">
+                        <span className="detail-list__overline">Timestamp On-Chain</span>
+                        <span className="detail-list__headline">
+                          {formatDate(bc.ledger_timestamp)}
+                        </span>
+                      </div>
+                    </li>
+                  )}
+                  {bc.issuer_did && (
+                    <li className="detail-list__item">
+                      <div className="detail-list__text">
+                        <span className="detail-list__overline">DID del Emisor</span>
+                        <span className="detail-list__headline detail-mono">
+                          {truncateHash(bc.issuer_did)}
+                        </span>
+                      </div>
+                    </li>
+                  )}
+                  {bc.txn_id && (
+                    <li className="detail-list__item">
+                      <div className="detail-list__text">
+                        <span className="detail-list__overline">Transaction Hash</span>
+                        <div className="detail-inline-copy">
+                          <span className="detail-list__headline detail-mono">
+                            {truncateHash(bc.txn_id)}
+                          </span>
+                          <button
+                            className="detail-copy-btn"
+                            onClick={() => copyToClipboard(bc.txn_id, setTxCopied)}
+                            aria-label="Copiar transaction hash"
+                          >
+                            <MdContentCopy />
+                            <span>{txCopied ? 'Copiado' : 'Copiar'}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </li>
+                  )}
+                </ul>
+
+                {bc.explorer_url && (
+                  <a
+                    href={bc.explorer_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="detail-explorer-btn"
+                  >
+                    Verificar en Explorer
+                    <MdOpenInNew />
+                  </a>
+                )}
+              </section>
+            )}
+          </div>
+
+          {/* ── Visibility Switch ── */}
+          {onToggleVisibility && (
+            <div className="detail-switch-row">
+              <div className="detail-switch-row__text">
+                <span className="detail-switch-row__label">Verificación pública</span>
+                <span className="detail-switch-row__support">
+                  {credential.is_public
+                    ? 'Cualquier persona puede verificar esta credencial'
+                    : 'Solo tú puedes ver esta credencial'}
+                </span>
+              </div>
               <button
-                className="modal-copy-btn"
-                onClick={handleCopyHash}
-                title="Copiar hash"
-                aria-label="Copiar hash"
+                role="switch"
+                aria-checked={credential.is_public}
+                className={`detail-switch ${credential.is_public ? 'detail-switch--on' : ''}`}
+                onClick={() => onToggleVisibility(credential)}
               >
-                <MdContentCopy />
-                {hashCopied ? 'Copiado' : 'Copiar'}
+                <span className="detail-switch__track">
+                  <span className="detail-switch__thumb" />
+                </span>
               </button>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* ── Credential Hash ── */}
+          {credential.credential_hash && (
+            <div className="detail-hash-section">
+              <span className="detail-list__overline">Huella Digital (SHA-256)</span>
+              <div className="detail-inline-copy">
+                <code className="detail-hash-value">
+                  {credential.credential_hash}
+                </code>
+                <button
+                  className="detail-copy-btn"
+                  onClick={() => copyToClipboard(credential.credential_hash, setHashCopied)}
+                  aria-label="Copiar hash"
+                >
+                  <MdContentCopy />
+                  <span>{hashCopied ? 'Copiado' : 'Copiar'}</span>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
