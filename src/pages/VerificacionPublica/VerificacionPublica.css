@@ -177,6 +177,17 @@
   text-decoration: none;
 }
 
+/* ── Tx Hash Link ── */
+.verificacion-tx-link {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.verificacion-tx-link:hover {
+  text-decoration: underline;
+}
+
 /* ── Description text ── */
 .verificacion-description {
   font: var(--md-sys-typescale-body-medium);

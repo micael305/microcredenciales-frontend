@@ -19,8 +19,19 @@ const STATUS_LABELS = {
   pending: 'Pendiente',
 };
 
+/**
+ * Truncate a hex hash for display: first 10 + last 8 chars.
+ * @param {string} hash
+ * @returns {string}
+ */
+function truncateHash(hash) {
+  if (!hash || hash.length <= 20) return hash || '';
+  return `${hash.slice(0, 10)}…${hash.slice(-8)}`;
+}
+
 function CredentialModal({ credential, onClose, onToggleVisibility }) {
   const [hashCopied, setHashCopied] = useState(false);
+  const [txCopied, setTxCopied] = useState(false);
 
   if (!credential) return null;
 
@@ -33,6 +44,13 @@ function CredentialModal({ credential, onClose, onToggleVisibility }) {
     navigator.clipboard.writeText(credential.credential_hash);
     setHashCopied(true);
     setTimeout(() => setHashCopied(false), 2000);
+  };
+
+  const handleCopyTx = () => {
+    if (!blockchain?.txn_id) return;
+    navigator.clipboard.writeText(blockchain.txn_id);
+    setTxCopied(true);
+    setTimeout(() => setTxCopied(false), 2000);
   };
 
   return (
@@ -105,10 +123,29 @@ function CredentialModal({ credential, onClose, onToggleVisibility }) {
                   <span className="modal-value modal-mono">{blockchain.issuer_did}</span>
                 </div>
               )}
+              {blockchain.ledger_timestamp && (
+                <div className="modal-grid-item">
+                  <span className="modal-label">Timestamp On-Chain</span>
+                  <span className="modal-value">{formatDate(blockchain.ledger_timestamp)}</span>
+                </div>
+              )}
               {blockchain.txn_id && (
                 <div className="modal-grid-item modal-grid-item--full">
-                  <span className="modal-label">Transaction ID</span>
-                  <span className="modal-value modal-mono">{blockchain.txn_id}</span>
+                  <span className="modal-label">Transaction Hash</span>
+                  <div className="modal-hash-row">
+                    <span className="modal-value modal-mono modal-hash-text">
+                      {truncateHash(blockchain.txn_id)}
+                    </span>
+                    <button
+                      className="modal-copy-btn"
+                      onClick={handleCopyTx}
+                      title="Copiar transaction hash"
+                      aria-label="Copiar transaction hash"
+                    >
+                      <MdContentCopy />
+                      {txCopied ? 'Copiado' : 'Copiar'}
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -120,7 +157,7 @@ function CredentialModal({ credential, onClose, onToggleVisibility }) {
                 className="modal-explorer-link"
               >
                 <MdOpenInNew />
-                Ver en Blockchain Explorer
+                Verificar en Blockchain Explorer
               </a>
             )}
           </div>
@@ -130,6 +167,10 @@ function CredentialModal({ credential, onClose, onToggleVisibility }) {
         {credential.credential_hash && (
           <div className="modal-hash-box">
             <span className="modal-label">Hash de la Credencial (SHA-256)</span>
+            <p className="modal-hash-help">
+              Este hash identifica de forma única a esta credencial. Es el mismo valor registrado
+              en la blockchain — puede verificarlo en el Explorer.
+            </p>
             <div className="modal-hash-row">
               <span className="modal-value modal-mono modal-hash-text">
                 {credential.credential_hash}

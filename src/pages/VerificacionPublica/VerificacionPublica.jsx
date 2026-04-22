@@ -156,6 +156,14 @@ function VerificacionPublica() {
                           {getBlockchainStatusLabel(blockchain.status)}
                         </span>
                       </div>
+                      {blockchain.ledger_timestamp && (
+                        <div className="verificacion-data">
+                          <span className="verificacion-label">Timestamp On-Chain</span>
+                          <span className="verificacion-value">
+                            {formatDate(blockchain.ledger_timestamp)}
+                          </span>
+                        </div>
+                      )}
                       {blockchain.issuer_did && (
                         <div className="verificacion-data">
                           <span className="verificacion-label">DID del Emisor</span>
@@ -166,10 +174,21 @@ function VerificacionPublica() {
                       )}
                       {blockchain.txn_id && (
                         <div className="verificacion-data">
-                          <span className="verificacion-label">Transaction ID</span>
-                          <span className="verificacion-value verificacion-hash">
-                            {blockchain.txn_id}
-                          </span>
+                          <span className="verificacion-label">Transaction Hash</span>
+                          {blockchain.explorer_url ? (
+                            <a
+                              href={blockchain.explorer_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="verificacion-value verificacion-hash verificacion-tx-link"
+                            >
+                              {blockchain.txn_id}
+                            </a>
+                          ) : (
+                            <span className="verificacion-value verificacion-hash">
+                              {blockchain.txn_id}
+                            </span>
+                          )}
                         </div>
                       )}
                       {blockchain.explorer_url && (
@@ -180,7 +199,7 @@ function VerificacionPublica() {
                           className="verificacion-explorer-link"
                         >
                           <MdOpenInNew />
-                          Ver en Blockchain Explorer
+                          Verificar en Blockchain Explorer
                         </a>
                       )}
                     </>
