@@ -167,8 +167,8 @@
 }
 
 .verificacion-status-badge--pending {
-  background-color: var(--md-custom-color-warning-container);
-  color: var(--md-custom-color-on-warning-container);
+  background-color: var(--md-custom-color-warning-container, hsl(45, 100%, 88%));
+  color: var(--md-custom-color-on-warning-container, hsl(45, 100%, 20%));
 }
 
 .verificacion-status-badge--error {
@@ -181,6 +181,58 @@
   color: var(--md-sys-color-on-surface-variant);
 }
 
+/* ── Blockchain Meta (Network + Timestamp) ── */
+.verificacion-bc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.verificacion-bc-meta__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.verificacion-bc-meta__icon {
+  font-size: 0.875rem;
+}
+
+/* ── Blockchain Description ── */
+.verificacion-bc-description {
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+  margin: 4px 0 0 0;
+  line-height: 1.5;
+}
+
+/* ── Blockchain Empty State ── */
+.verificacion-bc-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  border-radius: var(--md-sys-shape-corner-medium);
+  background-color: var(--md-sys-color-surface-container);
+  text-align: center;
+}
+
+.verificacion-bc-empty__icon {
+  font-size: 1.75rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.verificacion-bc-empty__text {
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+  margin: 0;
+  line-height: 1.5;
+}
+
 /* ── Tx Hash Link ── */
 .verificacion-tx-link {
   color: var(--md-sys-color-primary);
@@ -191,32 +243,29 @@
   text-decoration: underline;
 }
 
-/* ── Explorer Link (MD3 Outlined Button) ── */
+/* ── Explorer Link (MD3 Tonal Button) ── */
 .verificacion-explorer-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   font: var(--md-sys-typescale-label-large);
-  color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-secondary-container);
+  background-color: var(--md-sys-color-secondary-container);
   text-decoration: none;
   padding: 10px 24px;
-  border: 1px solid var(--md-sys-color-outline);
+  border: none;
   border-radius: var(--md-sys-shape-corner-full);
   margin-top: 4px;
-  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+  transition:
+    background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
 }
 
 .verificacion-explorer-link:hover {
-  background-color: var(--md-sys-color-primary-container);
+  box-shadow: var(--md-sys-elevation-level1);
+  filter: brightness(1.06);
   text-decoration: none;
-}
-
-/* ── Description ── */
-.verificacion-description {
-  font: var(--md-sys-typescale-body-medium);
-  color: var(--md-sys-color-on-surface-variant);
-  margin: 20px 0 0 0;
 }
 
 /* ── Hash Box ── */
@@ -283,5 +332,10 @@
   .verificacion-hash-row {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .verificacion-bc-meta {
+    flex-direction: column;
+    gap: 6px;
   }
 }

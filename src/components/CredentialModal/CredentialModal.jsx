@@ -5,17 +5,20 @@ import {
   MdContentCopy,
   MdOpenInNew,
   MdVerified,
-  MdCheckCircle,
   MdSchool,
   MdAccountBalance,
   MdCalendarToday,
   MdGrade,
   MdPublic,
   MdLock,
+  MdLink,
+  MdSchedule,
+  MdErrorOutline,
 } from 'react-icons/md';
 import {
   getBlockchainStatusLabel,
   getBlockchainStatusVariant,
+  getBlockchainStatusDescription,
 } from '../../utils/blockchain';
 import './credentialModal.css';
 
@@ -30,12 +33,165 @@ function formatDate(isoString) {
   });
 }
 
+function formatDateTime(isoString) {
+  if (!isoString) return '—';
+  return new Date(isoString).toLocaleString('es-AR', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 function truncateHash(hash) {
   if (!hash || hash.length <= 24) return hash || '';
   return `${hash.slice(0, 14)}…${hash.slice(-12)}`;
 }
 
-/* ── Component ── */
+/* ── Blockchain Evidence Section ── */
+
+function BlockchainSection({ credential, bc, copyToClipboard, hashCopied, txCopied, setHashCopied, setTxCopied }) {
+  const bcVariant = bc ? getBlockchainStatusVariant(bc.status) : null;
+  const isAnchored = bcVariant === 'success';
+  const isPending = credential.status === 'pending' || credential.status === 'issued';
+
+  /* Case 1: Credential not yet claimed — no blockchain data expected */
+  if (isPending) {
+    return (
+      <section className="detail-section">
+        <h4 className="detail-section__title">Verificación Blockchain</h4>
+        <div className="detail-bc-empty">
+          <MdSchedule className="detail-bc-empty__icon" />
+          <p className="detail-bc-empty__text">
+            Guardá esta credencial en tu wallet escaneando el código QR para
+            obtener la verificación criptográfica en la blockchain.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  /* Case 2: Credential claimed but blockchain data unavailable (defensive) */
+  if (!bc) {
+    return (
+      <section className="detail-section">
+        <h4 className="detail-section__title">Verificación Blockchain</h4>
+        <div className="detail-bc-empty detail-bc-empty--warning">
+          <MdErrorOutline className="detail-bc-empty__icon" />
+          <p className="detail-bc-empty__text">
+            No se pudieron cargar los datos de verificación blockchain.
+            Intentá nuevamente en unos segundos.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  /* Case 3: Blockchain evidence available */
+  return (
+    <section className="detail-section">
+      <h4 className="detail-section__title">Verificación Blockchain</h4>
+      <div className={`detail-bc-card`}>
+        {/* Status badge */}
+        <div className="detail-bc-header">
+          <div className="detail-tooltip-container">
+            <span className={`detail-bc-badge detail-bc-badge--${bcVariant}`}>
+              <MdVerified className="detail-bc-badge__icon" />
+              {getBlockchainStatusLabel(bc.status)}
+            </span>
+            <div className="detail-tooltip">
+              {getBlockchainStatusDescription(bc.status)}
+            </div>
+          </div>
+        </div>
+
+        {/* Network & timestamp row */}
+        <div className="detail-bc-meta">
+          {/*<span className="detail-bc-meta__item">
+            <MdLink className="detail-bc-meta__icon" />
+            {bc.network}
+          </span>*/}
+          {bc.ledger_timestamp && (
+            <span className="detail-bc-meta__item">
+              <MdSchedule className="detail-bc-meta__icon" />
+              {formatDateTime(bc.ledger_timestamp)}
+            </span>
+          )}
+        </div>
+
+        {/* Credential hash */}
+        {credential.credential_hash && (
+          <div className="detail-hash-box">
+            <span className="detail-hash-label">Huella Digital (SHA-256)</span>
+            <div className="detail-hash-row">
+              <code className="detail-hash-code">{truncateHash(credential.credential_hash)}</code>
+              <button
+                className="detail-copy-btn-mini"
+                onClick={() => copyToClipboard(credential.credential_hash, setHashCopied)}
+                title="Copiar Hash"
+              >
+                <MdContentCopy />
+                {hashCopied && <span className="copy-feedback">¡Listo!</span>}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Transaction hash */}
+        {bc.txn_id && (
+          <div className="detail-hash-box">
+            <span className="detail-hash-label">Transaction Hash</span>
+            <div className="detail-hash-row">
+              <code className="detail-hash-code">{truncateHash(bc.txn_id)}</code>
+              <button
+                className="detail-copy-btn-mini"
+                onClick={() => copyToClipboard(bc.txn_id, setTxCopied)}
+                title="Copiar Tx Hash"
+              >
+                <MdContentCopy />
+                {txCopied && <span className="copy-feedback">¡Listo!</span>}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Issuer DID */}
+        {bc.issuer_did && (
+          <div className="detail-hash-box">
+            <span className="detail-hash-label">DID del Emisor</span>
+            <code className="detail-hash-code detail-hash-code--subtle">
+              {truncateHash(bc.issuer_did)}
+            </code>
+          </div>
+        )}
+
+        {/* Status description (moved to tooltip) */}
+        {/* {isAnchored && (
+          <p className="detail-bc-description">
+            {getBlockchainStatusDescription(bc.status)}
+          </p>
+        )} */}
+
+        {/* Explorer button — MD3 Tonal Button */}
+        {bc.explorer_url && (
+          <a
+            href={bc.explorer_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="detail-explorer-btn"
+            id="cm-verify-explorer-btn"
+          >
+            <MdOpenInNew className="detail-explorer-btn__icon" />
+            Verificar en Blockchain Explorer
+          </a>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* ── Main Modal Component ── */
 
 function CredentialModal({
   credential,
@@ -55,8 +211,6 @@ function CredentialModal({
   if (!credential) return null;
 
   const bc = credential.blockchain;
-  const bcVariant = bc ? getBlockchainStatusVariant(bc.status) : null;
-  const isVerified = bcVariant === 'success';
 
   return (
     <div className="cm-scrim" onClick={onClose}>
@@ -67,7 +221,7 @@ function CredentialModal({
         aria-modal="true"
         aria-labelledby="cm-dialog-title"
       >
-        {/* ── Dialog Header (Current Style) ── */}
+        {/* ── Dialog Header ── */}
         <header className="cm-dialog-header">
           <div className="cm-dialog-header__left">
             <div className="cm-dialog-header__icon-circle">
@@ -88,7 +242,7 @@ function CredentialModal({
           </button>
         </header>
 
-        {/* ── Dialog Content (Commit 0921e2d Style + Compact Grid) ── */}
+        {/* ── Dialog Content ── */}
         <div className="cm-dialog-content">
           {/* Status Badge & Date Row */}
           <div className="detail-status-row">
@@ -99,7 +253,7 @@ function CredentialModal({
           </div>
 
           <div className="detail-columns">
-            {/* ── Left Column: Information (Optimized Compact Grid) ── */}
+            {/* ── Left Column: Information ── */}
             <section className="detail-section">
               <h4 className="detail-section__title">Información</h4>
               <div className="detail-info-grid">
@@ -137,7 +291,7 @@ function CredentialModal({
                 )}
               </div>
 
-              {/* Visibility Switch (Integrated into Info Section) */}
+              {/* Visibility Switch */}
               {onToggleVisibility && (
                 <div className="detail-visibility-box">
                   <div className="detail-visibility-text">
@@ -164,72 +318,19 @@ function CredentialModal({
             </section>
 
             {/* ── Right Column: Blockchain ── */}
-            <section className="detail-section">
-              <h4 className="detail-section__title">Verificación Blockchain</h4>
-              {bc ? (
-                <div className="detail-bc-card">
-                  <div className="detail-bc-header">
-                    <span className={`detail-bc-badge detail-bc-badge--${bcVariant}`}>
-                      <MdVerified className="detail-bc-badge__icon" />
-                      {getBlockchainStatusLabel(bc.status)}
-                    </span>
-                    <span className="detail-bc-network">Red {bc.network}</span>
-                  </div>
-
-                  {credential.credential_hash && (
-                    <div className="detail-hash-box">
-                      <span className="detail-hash-label">Huella Digital (SHA-256)</span>
-                      <div className="detail-hash-row">
-                        <code className="detail-hash-code">{truncateHash(credential.credential_hash)}</code>
-                        <button
-                          className="detail-copy-btn-mini"
-                          onClick={() => copyToClipboard(credential.credential_hash, setHashCopied)}
-                          title="Copiar Hash"
-                        >
-                          <MdContentCopy />
-                          {hashCopied && <span className="copy-feedback">¡Listo!</span>}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {bc.txn_id && (
-                    <div className="detail-hash-box">
-                      <span className="detail-hash-label">Transaction Hash</span>
-                      <div className="detail-hash-row">
-                        <code className="detail-hash-code">{truncateHash(bc.txn_id)}</code>
-                        <button
-                          className="detail-copy-btn-mini"
-                          onClick={() => copyToClipboard(bc.txn_id, setTxCopied)}
-                          title="Copiar Tx Hash"
-                        >
-                          <MdContentCopy />
-                          {txCopied && <span className="copy-feedback">¡Listo!</span>}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {bc.explorer_url && (
-                    <a
-                      href={bc.explorer_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="detail-explorer-link"
-                    >
-                      Verificar en Explorer
-                      <MdOpenInNew />
-                    </a>
-                  )}
-                </div>
-              ) : (
-                <p className="detail-empty-text">Sin datos de blockchain disponibles.</p>
-              )}
-            </section>
+            <BlockchainSection
+              credential={credential}
+              bc={bc}
+              copyToClipboard={copyToClipboard}
+              hashCopied={hashCopied}
+              txCopied={txCopied}
+              setHashCopied={setHashCopied}
+              setTxCopied={setTxCopied}
+            />
           </div>
         </div>
 
-        {/* ── Dialog Actions (Current Style) ── */}
+        {/* ── Dialog Actions ── */}
         <footer className="cm-dialog-actions">
           <button className="cm-action-btn cm-action-btn--outlined" onClick={onClose}>
             Cerrar
