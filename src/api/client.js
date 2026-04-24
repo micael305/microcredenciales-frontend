@@ -108,3 +108,16 @@ export async function toggleVisibility(credentialHash, isPublic) {
     body: { credential_hash: credentialHash, is_public: isPublic },
   });
 }
+
+// --- Admin ---
+
+export async function getAdminCredentials() {
+  return request('/api/admin/credentials');
+}
+
+export async function revokeCredential(credentialHash, reason) {
+  return request('/api/admin/credentials/revoke', {
+    method: 'POST',
+    body: { credential_hash: credentialHash, reason },
+  });
+}

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   MdOpenInNew,
   MdVerified,
+  MdBlock,
   MdContentCopy,
   MdLink,
   MdSchedule,
@@ -10,6 +11,7 @@ import {
 } from 'react-icons/md';
 import * as api from '../../api/client';
 import {
+  BLOCKCHAIN_STATUS,
   getBlockchainStatusLabel,
   getBlockchainStatusVariant,
   getBlockchainStatusDescription,
@@ -69,7 +71,9 @@ function BlockchainEvidence({ bc }) {
     <div className="verificacion-details">
       <div className="verificacion-bc-badge-row">
         <span className={`verificacion-status-badge verificacion-status-badge--${bcVariant}`}>
-          <MdVerified style={{ fontSize: '1rem', marginRight: '4px' }} />
+          {bc.status === BLOCKCHAIN_STATUS.REVOKED
+            ? <MdBlock style={{ fontSize: '1rem', marginRight: '4px' }} />
+            : <MdVerified style={{ fontSize: '1rem', marginRight: '4px' }} />}
           {getBlockchainStatusLabel(bc.status)}
         </span>
       </div>

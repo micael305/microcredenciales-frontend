@@ -11,6 +11,9 @@ import Home from './pages/auth/Home.jsx'
 // Student views
 import Dashboard from './pages/alumno/Dashboard.jsx'
 
+// Admin views
+import AdminDashboard from './pages/admin/AdminDashboard.jsx'
+
 // Public verification
 import VerificacionPublica from './pages/VerificacionPublica/VerificacionPublica.jsx'
 
@@ -32,7 +35,12 @@ function MoodleCallback() {
 
     loginWithMoodleToken(token)
       .then((data) => {
-        const dest = data.student.has_password ? '/alumno' : '/configurar-password';
+        let dest = '/alumno';
+        if (data.student.role === 'admin') {
+          dest = '/admin';
+        } else if (!data.student.has_password) {
+          dest = '/configurar-password';
+        }
         navigate(dest, { replace: true });
       })
       .catch((err) => setError(err.message || 'Error al autenticar con Moodle'));
@@ -66,6 +74,7 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/auth/moodle-callback' element={<MoodleCallback />} />
         <Route path='/alumno' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path='/admin' element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path='/configurar-password' element={<ProtectedRoute><SetPassword /></ProtectedRoute>} />
         <Route path='/verificar' element={<VerificacionPublica />} />
         <Route path='/verificar/:hash' element={<VerificacionPublica />} />

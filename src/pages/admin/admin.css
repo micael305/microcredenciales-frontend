@@ -1,0 +1,415 @@
+/* =================================================================
+ * Admin Dashboard — MD3 Styles
+ * =================================================================
+ * Follows Material Design 3 token system and the same visual
+ * language as the student dashboard (alumno.css).
+ * ================================================================= */
+
+/* ── Layout ── */
+
+.admin-page {
+  min-height: 100vh;
+  background-color: var(--md-sys-color-background);
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  flex: 1;
+}
+
+/* ── Page Header ── */
+
+.admin-page-header {
+  margin-bottom: 32px;
+}
+
+.admin-page-header h1 {
+  font: var(--md-sys-typescale-headline-large);
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 4px;
+}
+
+.admin-page-subtitle {
+  font: var(--md-sys-typescale-body-large);
+  color: var(--md-sys-color-on-surface-variant);
+  margin: 0;
+}
+
+/* ── Stats Row ── */
+
+.admin-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.admin-stat-card {
+  background: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-stat-label {
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-stat-value {
+  font: var(--md-sys-typescale-headline-medium);
+  color: var(--md-sys-color-on-surface);
+}
+
+.admin-stat-value--success {
+  color: var(--md-custom-color-success);
+}
+
+.admin-stat-value--error {
+  color: var(--md-sys-color-error);
+}
+
+/* ── Toolbar ── */
+
+.admin-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.admin-search-input {
+  flex: 1;
+  min-width: 240px;
+  padding: 10px 16px;
+  font: var(--md-sys-typescale-body-medium);
+  background: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-full);
+  color: var(--md-sys-color-on-surface);
+  outline: none;
+  transition: border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+.admin-search-input:focus {
+  border-color: var(--md-sys-color-primary);
+}
+
+.admin-search-input::placeholder {
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.admin-filter-select {
+  padding: 10px 16px;
+  font: var(--md-sys-typescale-body-medium);
+  background: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-full);
+  color: var(--md-sys-color-on-surface);
+  cursor: pointer;
+  outline: none;
+}
+
+/* ── Table ── */
+
+.admin-table-container {
+  background: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+.admin-table th {
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface-container-low);
+  position: sticky;
+  top: 0;
+}
+
+.admin-table td {
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--md-sys-color-surface-container-high);
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table-student-name {
+  font: var(--md-sys-typescale-title-small);
+  color: var(--md-sys-color-on-surface);
+}
+
+.admin-table-email {
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 2px;
+}
+
+/* ── Badges ── */
+
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--md-sys-shape-corner-full);
+  font: var(--md-sys-typescale-label-medium);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.admin-badge--anchored {
+  background: var(--md-custom-color-success-container);
+  color: var(--md-custom-color-on-success-container);
+  border: 1px solid var(--md-custom-color-success-border);
+}
+
+.admin-badge--revoked {
+  background: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+  border: 1px solid #F5B8B4;
+}
+
+.admin-badge--not-anchored {
+  background: var(--md-custom-color-warning-container);
+  color: var(--md-custom-color-on-warning-container);
+  border: 1px solid #F0C98E;
+}
+
+/* ── Revocation info ── */
+
+.admin-revocation-info {
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 4px;
+  max-width: 200px;
+  white-space: normal;
+  line-height: 1.4;
+}
+
+/* ── Revoke button ── */
+
+.admin-btn-revoke {
+  padding: 6px 16px;
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-error);
+  background: transparent;
+  border: 1px solid var(--md-sys-color-error);
+  border-radius: var(--md-sys-shape-corner-full);
+  cursor: pointer;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+.admin-btn-revoke:hover {
+  background: var(--md-sys-color-error-container);
+}
+
+.admin-btn-revoke:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.admin-revoked-label {
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-error);
+}
+
+/* ── Revocation Dialog ── */
+
+.admin-revoke-dialog {
+  background: var(--md-sys-color-surface-container-lowest);
+  border-radius: var(--md-sys-shape-corner-extra-large);
+  padding: 32px;
+  max-width: 480px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-revoke-dialog h2 {
+  font: var(--md-sys-typescale-headline-medium);
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+}
+
+.admin-revoke-dialog-info {
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.5;
+}
+
+.admin-revoke-dialog-info strong {
+  color: var(--md-sys-color-on-surface);
+}
+
+.admin-revoke-dialog-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: var(--md-sys-color-error-container);
+  border-radius: var(--md-sys-shape-corner-medium);
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-error-container);
+  line-height: 1.5;
+}
+
+.admin-revoke-dialog-warning-icon {
+  flex-shrink: 0;
+  font-size: 1.25rem;
+}
+
+.admin-revoke-reason-input {
+  width: 100%;
+  padding: 12px 16px;
+  font: var(--md-sys-typescale-body-medium);
+  background: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-small);
+  color: var(--md-sys-color-on-surface);
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  transition: border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+.admin-revoke-reason-input:focus {
+  border-color: var(--md-sys-color-primary);
+}
+
+.admin-revoke-reason-input::placeholder {
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.admin-revoke-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.admin-btn-cancel {
+  padding: 10px 24px;
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-primary);
+  background: transparent;
+  border: none;
+  border-radius: var(--md-sys-shape-corner-full);
+  cursor: pointer;
+}
+
+.admin-btn-confirm-revoke {
+  padding: 10px 24px;
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-on-error);
+  background: var(--md-sys-color-error);
+  border: none;
+  border-radius: var(--md-sys-shape-corner-full);
+  cursor: pointer;
+  transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+.admin-btn-confirm-revoke:hover {
+  opacity: 0.88;
+}
+
+.admin-btn-confirm-revoke:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+/* ── Empty / Loading / Error States ── */
+
+.admin-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  gap: 12px;
+}
+
+.admin-state-icon {
+  font-size: 2.5rem;
+  opacity: 0.48;
+}
+
+.admin-state-text {
+  font: var(--md-sys-typescale-body-large);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.admin-error-text {
+  font: var(--md-sys-typescale-body-large);
+  color: var(--md-sys-color-error);
+}
+
+.admin-btn-retry {
+  padding: 10px 24px;
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-on-primary);
+  background: var(--md-sys-color-primary);
+  border: none;
+  border-radius: var(--md-sys-shape-corner-full);
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 16px 12px 48px;
+  }
+
+  .admin-stats-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .admin-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-search-input {
+    min-width: unset;
+  }
+
+  .admin-table th:nth-child(4),
+  .admin-table td:nth-child(4) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-stats-row {
+    grid-template-columns: 1fr;
+  }
+}

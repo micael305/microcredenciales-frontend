@@ -5,6 +5,7 @@ import {
   MdContentCopy,
   MdOpenInNew,
   MdVerified,
+  MdBlock,
   MdSchool,
   MdAccountBalance,
   MdCalendarToday,
@@ -16,6 +17,7 @@ import {
   MdErrorOutline,
 } from 'react-icons/md';
 import {
+  BLOCKCHAIN_STATUS,
   getBlockchainStatusLabel,
   getBlockchainStatusVariant,
   getBlockchainStatusDescription,
@@ -97,7 +99,9 @@ function BlockchainSection({ credential, bc, copyToClipboard, hashCopied, txCopi
         <div className="detail-bc-header">
           <div className="detail-tooltip-container">
             <span className={`detail-bc-badge detail-bc-badge--${bcVariant}`}>
-              <MdVerified className="detail-bc-badge__icon" />
+              {bc.status === BLOCKCHAIN_STATUS.REVOKED
+                ? <MdBlock className="detail-bc-badge__icon" />
+                : <MdVerified className="detail-bc-badge__icon" />}
               {getBlockchainStatusLabel(bc.status)}
             </span>
             <div className="detail-tooltip">
