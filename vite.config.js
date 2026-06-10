@@ -8,9 +8,11 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
   },
-  // Configuración de pruebas unitarias (Vitest).
-  // 'node' alcanza para funciones puras como utils/blockchain.js.
+  // Configuración de pruebas (Vitest).
+  // jsdom: necesario para los tests de componentes React (DOM simulado).
+  // Las pruebas de funciones puras (utils/blockchain.js) también corren aquí.
   test: {
-    environment: 'node',
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
   },
 })
