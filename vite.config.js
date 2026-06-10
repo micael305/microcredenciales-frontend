@@ -8,4 +8,9 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
   },
+  // Configuración de pruebas unitarias (Vitest).
+  // 'node' alcanza para funciones puras como utils/blockchain.js.
+  test: {
+    environment: 'node',
+  },
 })
