@@ -121,3 +121,7 @@ export async function revokeCredential(credentialHash, reason) {
     body: { credential_hash: credentialHash, reason },
   });
 }
+
+export async function getRevocationAudit() {
+  return request('/api/admin/credentials/revocations');
+}

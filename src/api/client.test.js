@@ -145,6 +145,18 @@ describe('construcción de los endpoints', () => {
     expect(JSON.parse(config.body)).toEqual({ credential_hash: 'hash123', reason: 'fraude' });
   });
 
+  it('getRevocationAudit: GET al endpoint de auditoría con token', async () => {
+    api.setToken('TKN');
+    mockFetchOnce({ data: [] });
+
+    await api.getRevocationAudit();
+
+    const [url, config] = globalThis.fetch.mock.calls[0];
+    expect(url).toBe(`${BASE}/api/admin/credentials/revocations`);
+    expect(config.method).toBe('GET');
+    expect(config.headers.Authorization).toBe('Bearer TKN');
+  });
+
   it('toggleVisibility: PATCH con el cuerpo esperado', async () => {
     api.setToken('TKN');
     mockFetchOnce({ data: { ok: true } });
