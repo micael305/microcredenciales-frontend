@@ -12,9 +12,12 @@ import {
 import * as api from '../../api/client';
 import {
   BLOCKCHAIN_STATUS,
+  VERIFICATION_VERDICT,
   getBlockchainStatusLabel,
   getBlockchainStatusVariant,
   getBlockchainStatusDescription,
+  resolveVerdict,
+  getVerdictPresentation,
 } from '../../utils/blockchain';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
@@ -233,85 +236,103 @@ function VerificacionPublica() {
         )}
 
         {/* ── Result Card ── */}
-        {result && !loading && (
-          <div className="verificacion-card">
-            {result.valid ? (
-              <>
-                <div className="verificacion-icon">✓</div>
-                <h2 className="verificacion-title">Credencial Reconocida</h2>
+        {result && !loading && (() => {
+          const verdict = resolveVerdict(result);
+          const presentation = getVerdictPresentation(verdict);
+          const isNotFound = verdict === VERIFICATION_VERDICT.NOT_FOUND;
 
-                {/* ── 2-Column Result Layout ── */}
-                <div className="verificacion-result-columns">
-                  {/* Left: Credential data */}
-                  <div className="verificacion-details">
-                    {result.student_name && (
-                      <div className="verificacion-data">
-                        <span className="verificacion-label">Alumno</span>
-                        <span className="verificacion-value">{result.student_name}</span>
-                      </div>
-                    )}
-                    {result.course_name && (
-                      <div className="verificacion-data">
-                        <span className="verificacion-label">Curso</span>
-                        <span className="verificacion-value">{result.course_name}</span>
-                      </div>
-                    )}
-                    {result.completion_date && (
-                      <div className="verificacion-data">
-                        <span className="verificacion-label">Fecha de Emisión</span>
-                        <span className="verificacion-value">
-                          {formatDate(result.completion_date)}
-                        </span>
-                      </div>
-                    )}
-                    {result.issuer && (
-                      <div className="verificacion-data">
-                        <span className="verificacion-label">Institución Emisora</span>
-                        <span className="verificacion-value">{result.issuer}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Right: Blockchain evidence */}
-                  <BlockchainEvidence bc={result.blockchain} />
+          if (isNotFound) {
+            return (
+              <div className="verificacion-card">
+                <div className="verificacion-icon verificacion-icon--error">
+                  {presentation.icon}
                 </div>
-
-                {/* ── Hash Box ── */}
-                <div className="verificacion-hash-box">
-                  <span className="verificacion-label">Huella Digital (SHA-256)</span>
-                  <div className="verificacion-hash-row">
-                    <code className="verificacion-hash-value">
-                      {result.credential_hash}
-                    </code>
-                    <button
-                      className="verificacion-copy-btn"
-                      onClick={handleCopyHash}
-                      aria-label="Copiar hash"
-                    >
-                      <MdContentCopy />
-                      {hashCopied ? 'Copiado' : 'Copiar'}
-                    </button>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="verificacion-icon verificacion-icon--error">✕</div>
-                <h2 className="verificacion-title">Credencial No Encontrada</h2>
-                <p className="verificacion-text">
-                  No se encontró ninguna credencial que corresponda al hash proporcionado.
-                  Verificá que el hash sea correcto.
-                </p>
+                <h2 className="verificacion-title">{presentation.title}</h2>
+                <p className="verificacion-text">{presentation.description}</p>
                 <div className="verificacion-hash-box">
                   <span className="verificacion-label">Hash Consultado</span>
                   <code className="verificacion-hash-value">
                     {result.credential_hash}
                   </code>
                 </div>
-              </>
-            )}
-          </div>
-        )}
+              </div>
+            );
+          }
+
+          return (
+            <div className="verificacion-card">
+              <div
+                className={`verificacion-icon verificacion-icon--${presentation.variant}`}
+              >
+                {presentation.icon}
+              </div>
+              <h2 className="verificacion-title">{presentation.title}</h2>
+              <p className="verificacion-text">{presentation.description}</p>
+
+              {/* ── 2-Column Result Layout ── */}
+              <div className="verificacion-result-columns">
+                {/* Left: Credential data */}
+                <div className="verificacion-details">
+                  {result.student_name && (
+                    <div className="verificacion-data">
+                      <span className="verificacion-label">Alumno</span>
+                      <span className="verificacion-value">{result.student_name}</span>
+                    </div>
+                  )}
+                  {result.course_name && (
+                    <div className="verificacion-data">
+                      <span className="verificacion-label">Curso</span>
+                      <span className="verificacion-value">{result.course_name}</span>
+                    </div>
+                  )}
+                  {result.completion_date && (
+                    <div className="verificacion-data">
+                      <span className="verificacion-label">Fecha de Emisión</span>
+                      <span className="verificacion-value">
+                        {formatDate(result.completion_date)}
+                      </span>
+                    </div>
+                  )}
+                  {result.revoked_at && (
+                    <div className="verificacion-data">
+                      <span className="verificacion-label">Fecha de Revocación</span>
+                      <span className="verificacion-value">
+                        {formatDate(result.revoked_at)}
+                      </span>
+                    </div>
+                  )}
+                  {result.issuer && (
+                    <div className="verificacion-data">
+                      <span className="verificacion-label">Institución Emisora</span>
+                      <span className="verificacion-value">{result.issuer}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Right: Blockchain evidence */}
+                <BlockchainEvidence bc={result.blockchain} />
+              </div>
+
+              {/* ── Hash Box ── */}
+              <div className="verificacion-hash-box">
+                <span className="verificacion-label">Huella Digital (SHA-256)</span>
+                <div className="verificacion-hash-row">
+                  <code className="verificacion-hash-value">
+                    {result.credential_hash}
+                  </code>
+                  <button
+                    className="verificacion-copy-btn"
+                    onClick={handleCopyHash}
+                    aria-label="Copiar hash"
+                  >
+                    <MdContentCopy />
+                    {hashCopied ? 'Copiado' : 'Copiar'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       <Footer />
