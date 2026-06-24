@@ -188,6 +188,91 @@
   margin-top: 1px;
 }
 
+/* ── LinkedIn section ── */
+.share-linkedin-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.share-linkedin-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.share-linkedin-actions .share-action-btn {
+  flex: 1;
+  min-width: 140px;
+}
+
+/* Copy-to-clipboard fields for LinkedIn's manual form */
+.share-fields {
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+  padding: 4px 12px;
+  background-color: var(--md-sys-color-surface-container-low);
+}
+
+.share-fields__summary {
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-primary);
+  cursor: pointer;
+  padding: 8px 0;
+  list-style-position: inside;
+}
+
+.share-fields__hint {
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+  margin: 0 0 8px 0;
+}
+
+.share-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.share-field__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.share-field__label {
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.share-field__value {
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface);
+  word-break: break-all;
+}
+
+.share-field__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-primary);
+  cursor: pointer;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-standard);
+}
+
+.share-field__copy:hover {
+  background-color: var(--md-sys-color-secondary-container);
+}
+
 /* ── Footer ── */
 .share-actions {
   display: flex;
