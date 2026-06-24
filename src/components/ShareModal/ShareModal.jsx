@@ -1,7 +1,31 @@
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { MdContentCopy, MdClose, MdShare } from 'react-icons/md';
+import { MdContentCopy, MdClose, MdShare, MdLock } from 'react-icons/md';
+import { FaLinkedin } from 'react-icons/fa';
 import './ShareModal.css';
+
+/**
+ * Build a LinkedIn "Add to Profile" deep-link (Licenses & Certifications).
+ * Same integration the Moodle plugin uses, so sharing is consistent across
+ * the LMS and the portal and always points to the public verification URL.
+ */
+function buildLinkedInUrl({ name, organization, verifyUrl, certId, dateStr }) {
+  const params = new URLSearchParams({
+    startTask: 'CERTIFICATION_NAME',
+    name: name || 'Microcredencial',
+    organizationName: organization || 'Universidad Tecnológica Nacional',
+    certUrl: verifyUrl,
+    certId: String(certId),
+  });
+  if (dateStr) {
+    const d = new Date(dateStr);
+    if (!Number.isNaN(d.getTime())) {
+      params.set('issueYear', String(d.getFullYear()));
+      params.set('issueMonth', String(d.getMonth() + 1));
+    }
+  }
+  return `https://www.linkedin.com/profile/add?${params.toString()}`;
+}
 
 function ShareModal({ credential, onClose }) {
   const [copied, setCopied] = useState(false);
@@ -10,6 +34,17 @@ function ShareModal({ credential, onClose }) {
 
   const hash = credential.credential_hash || credential.id;
   const shareLink = `${window.location.origin}/verificar/${hash}`;
+  // Only warn when the credential is explicitly private; if the flag is absent
+  // (older payloads) we don't assume one way or the other.
+  const isPrivate = credential.is_public === false;
+
+  const linkedInUrl = buildLinkedInUrl({
+    name: credential.course_name,
+    organization: credential.issuer,
+    verifyUrl: shareLink,
+    certId: hash,
+    dateStr: credential.completion_date || credential.created_at,
+  });
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareLink);
@@ -51,6 +86,17 @@ function ShareModal({ credential, onClose }) {
             en el registro institucional y en la blockchain.
           </p>
 
+          {isPrivate && (
+            <div className="share-privacy-hint" role="note">
+              <MdLock className="share-privacy-hint__icon" />
+              <span>
+                Esta credencial es <strong>privada</strong>: quien abra el enlace confirmará que
+                existe, pero <strong>no verá tus datos</strong>. Hacela pública desde tu panel para
+                mostrar el curso y tu nombre.
+              </span>
+            </div>
+          )}
+
           <div className="share-link-section">
             <label className="share-label">Enlace Directo</label>
             <div className="share-input-group">
@@ -85,6 +131,15 @@ function ShareModal({ credential, onClose }) {
           <button className="share-action-btn share-action-btn--tonal" onClick={onClose}>
             Cerrar
           </button>
+          <a
+            href={linkedInUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="share-action-btn share-action-btn--linkedin"
+          >
+            <FaLinkedin className="share-action-btn__icon" />
+            Agregar a LinkedIn
+          </a>
         </footer>
       </div>
     </div>
