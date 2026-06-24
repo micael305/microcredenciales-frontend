@@ -13,6 +13,7 @@ import * as api from '../../api/client';
 import {
   BLOCKCHAIN_STATUS,
   VERIFICATION_VERDICT,
+  PRIVATE_PRESENTATION,
   getBlockchainStatusLabel,
   getBlockchainStatusVariant,
   getBlockchainStatusDescription,
@@ -240,6 +241,10 @@ function VerificacionPublica() {
           const verdict = resolveVerdict(result);
           const presentation = getVerdictPresentation(verdict);
           const isNotFound = verdict === VERIFICATION_VERDICT.NOT_FOUND;
+          // A private credential withholds its data — unless it is revoked,
+          // in which case the revocation is always shown (it overrides privacy).
+          const isPrivate =
+            result.is_private && verdict !== VERIFICATION_VERDICT.REVOKED;
 
           if (isNotFound) {
             return (
@@ -249,6 +254,32 @@ function VerificacionPublica() {
                 </div>
                 <h2 className="verificacion-title">{presentation.title}</h2>
                 <p className="verificacion-text">{presentation.description}</p>
+                <div className="verificacion-hash-box">
+                  <span className="verificacion-label">Hash Consultado</span>
+                  <code className="verificacion-hash-value">
+                    {result.credential_hash}
+                  </code>
+                </div>
+              </div>
+            );
+          }
+
+          if (isPrivate) {
+            return (
+              <div className="verificacion-card">
+                <div className="verificacion-icon verificacion-icon--warning">
+                  {PRIVATE_PRESENTATION.icon}
+                </div>
+                <h2 className="verificacion-title">{PRIVATE_PRESENTATION.title}</h2>
+                <p className="verificacion-text">{PRIVATE_PRESENTATION.description}</p>
+                {result.issuer && (
+                  <div className="verificacion-details">
+                    <div className="verificacion-data">
+                      <span className="verificacion-label">Institución Emisora</span>
+                      <span className="verificacion-value">{result.issuer}</span>
+                    </div>
+                  </div>
+                )}
                 <div className="verificacion-hash-box">
                   <span className="verificacion-label">Hash Consultado</span>
                   <code className="verificacion-hash-value">

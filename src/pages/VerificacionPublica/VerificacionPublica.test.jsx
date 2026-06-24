@@ -45,6 +45,40 @@ describe('VerificacionPublica', () => {
     expect(screen.getByText('Curso de Blockchain')).toBeInTheDocument();
   });
 
+  it('muestra "Credencial Privada" y oculta los datos cuando is_private', async () => {
+    api.publicVerify.mockResolvedValue({
+      valid: true,
+      verdict: 'valid',
+      is_private: true,
+      credential_hash: 'abc123',
+      issuer: 'UTN',
+      // El backend no envía datos del certificado en una credencial privada.
+    });
+
+    renderConHash('abc123');
+
+    await waitFor(() => expect(screen.getByText('Credencial Privada')).toBeInTheDocument());
+    // Se reconoce el emisor pero NO se muestran datos del titular.
+    expect(screen.getByText('UTN')).toBeInTheDocument();
+    expect(screen.queryByText('Credencial Válida')).not.toBeInTheDocument();
+  });
+
+  it('una credencial privada Y revocada muestra la revocación, no el estado privado', async () => {
+    api.publicVerify.mockResolvedValue({
+      valid: false,
+      verdict: 'revoked',
+      is_private: true,
+      credential_hash: 'abc123',
+      revoked_at: '2026-06-20T10:00:00+00:00',
+    });
+
+    renderConHash('abc123');
+
+    // La revocación SIEMPRE prevalece sobre la privacidad.
+    await waitFor(() => expect(screen.getByText('Credencial Revocada')).toBeInTheDocument());
+    expect(screen.queryByText('Credencial Privada')).not.toBeInTheDocument();
+  });
+
   it('muestra "Credencial Revocada" cuando el veredicto es revoked', async () => {
     api.publicVerify.mockResolvedValue({
       valid: false,

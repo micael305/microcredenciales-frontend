@@ -116,3 +116,19 @@ export function getVerdictPresentation(verdict) {
     VERDICT_PRESENTATION[VERIFICATION_VERDICT.NOT_FOUND]
   );
 }
+
+/**
+ * Presentation for a credential whose holder keeps it private.
+ *
+ * The credential exists and is valid, but its owner (the student) chose not
+ * to disclose its contents — aligned with the W3C principle of holder
+ * sovereignty over their own identity. We confirm existence and validity
+ * without revealing any certificate data.
+ */
+export const PRIVATE_PRESENTATION = Object.freeze({
+  title: 'Credencial Privada',
+  variant: 'warning',
+  icon: '🔒',
+  description:
+    'Esta credencial existe y es auténtica, pero su titular decidió mantenerla privada. Por respeto a su control sobre su propia identidad, no se muestran los datos del certificado. Solicitá al titular que la haga pública o que te la comparta directamente.',
+});

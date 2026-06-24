@@ -11,6 +11,7 @@ import { describe, it, expect } from 'vitest';
 import {
   BLOCKCHAIN_STATUS,
   VERIFICATION_VERDICT,
+  PRIVATE_PRESENTATION,
   getBlockchainStatusLabel,
   getBlockchainStatusVariant,
   getBlockchainStatusDescription,
@@ -133,5 +134,22 @@ describe('getVerdictPresentation', () => {
 describe('VERIFICATION_VERDICT', () => {
   it('es un objeto congelado', () => {
     expect(Object.isFrozen(VERIFICATION_VERDICT)).toBe(true);
+  });
+});
+
+describe('PRIVATE_PRESENTATION', () => {
+  it('tiene título, variante, icono y descripción', () => {
+    expect(PRIVATE_PRESENTATION.title.length).toBeGreaterThan(0);
+    expect(PRIVATE_PRESENTATION.variant.length).toBeGreaterThan(0);
+    expect(PRIVATE_PRESENTATION.icon.length).toBeGreaterThan(0);
+    expect(PRIVATE_PRESENTATION.description.length).toBeGreaterThan(0);
+  });
+
+  it('la descripción alude al control del titular sobre su identidad', () => {
+    expect(PRIVATE_PRESENTATION.description.toLowerCase()).toContain('titular');
+  });
+
+  it('es un objeto congelado', () => {
+    expect(Object.isFrozen(PRIVATE_PRESENTATION)).toBe(true);
   });
 });
