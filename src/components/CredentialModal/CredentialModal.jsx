@@ -15,6 +15,7 @@ import {
   MdLink,
   MdSchedule,
   MdErrorOutline,
+  MdImage,
 } from 'react-icons/md';
 import {
   BLOCKCHAIN_STATUS,
@@ -23,6 +24,8 @@ import {
   getBlockchainStatusDescription,
 } from '../../utils/blockchain';
 import './credentialModal.css';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
 /* ── Helpers ── */
 
@@ -294,6 +297,22 @@ function CredentialModal({
                   </div>
                 )}
               </div>
+
+              {/* View Diploma Button */}
+              {credential.credential_hash && (
+                <div style={{ marginTop: '24px' }}>
+                  <a
+                    href={`${API_BASE}/api/public/verify/${credential.credential_hash}/image`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cm-action-btn cm-action-btn--filled"
+                    style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+                  >
+                    <MdImage className="cm-action-btn__icon" />
+                    Ver Diploma
+                  </a>
+                </div>
+              )}
 
               {/* Visibility Switch */}
               {onToggleVisibility && (
