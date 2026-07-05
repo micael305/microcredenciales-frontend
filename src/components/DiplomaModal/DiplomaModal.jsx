@@ -1,6 +1,7 @@
-import React from 'react';
-import { MdClose } from 'react-icons/md';
+import React, { useRef, useState } from 'react';
+import { MdClose, MdDownload } from 'react-icons/md';
 import { QRCodeSVG } from 'qrcode.react';
+import html2canvas from 'html2canvas';
 import './DiplomaModal.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
@@ -15,7 +16,31 @@ function formatDate(isoString) {
 }
 
 function DiplomaModal({ credential, onClose }) {
+  const diplomaRef = useRef(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+
   if (!credential) return null;
+
+  const handleDownload = async () => {
+    if (!diplomaRef.current) return;
+    setIsDownloading(true);
+    try {
+      const canvas = await html2canvas(diplomaRef.current, {
+        scale: 2, // High resolution
+        useCORS: true,
+        backgroundColor: null
+      });
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `diploma_${credential.credential_hash || 'demo'}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Error generating diploma image:", err);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   // We construct the verification URL the QR code will point to
   const verifyUrl = `${window.location.origin}/verificar/${credential.credential_hash}`;
@@ -40,7 +65,7 @@ function DiplomaModal({ credential, onClose }) {
           <MdClose />
         </button>
 
-        <div className="md3-certificate-illustration">
+        <div className="md3-certificate-illustration" ref={diplomaRef}>
           <div className="cert-inner">
             <div className="cert-rings">
               <span className="cert-ring cert-ring--1"></span>
@@ -86,6 +111,18 @@ function DiplomaModal({ credential, onClose }) {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Floating Download Button */}
+        <div className="diploma-download-btn-container">
+          <button 
+            className="diploma-download-btn" 
+            onClick={handleDownload} 
+            disabled={isDownloading}
+          >
+            <MdDownload style={{ marginRight: '8px', fontSize: '1.2rem' }} />
+            {isDownloading ? 'Generando...' : 'Descargar Diploma'}
+          </button>
         </div>
       </div>
     </div>
