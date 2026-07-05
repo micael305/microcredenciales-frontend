@@ -23,6 +23,7 @@ import {
   getBlockchainStatusVariant,
   getBlockchainStatusDescription,
 } from '../../utils/blockchain';
+import DiplomaModal from '../DiplomaModal/DiplomaModal';
 import './credentialModal.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
@@ -208,6 +209,7 @@ function CredentialModal({
 }) {
   const [hashCopied, setHashCopied] = useState(false);
   const [txCopied, setTxCopied] = useState(false);
+  const [showDiploma, setShowDiploma] = useState(false);
 
   const copyToClipboard = useCallback((text, setter) => {
     navigator.clipboard.writeText(text);
@@ -301,16 +303,14 @@ function CredentialModal({
               {/* View Diploma Button */}
               {credential.credential_hash && (
                 <div style={{ marginTop: '24px' }}>
-                  <a
-                    href={`${API_BASE}/api/public/verify/${credential.credential_hash}/image`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={() => setShowDiploma(true)}
                     className="cm-action-btn cm-action-btn--filled"
                     style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
                   >
                     <MdImage className="cm-action-btn__icon" />
                     Ver Diploma
-                  </a>
+                  </button>
                 </div>
               )}
 
@@ -369,6 +369,13 @@ function CredentialModal({
           )}
         </footer>
       </div>
+
+      {showDiploma && (
+        <DiplomaModal 
+          credential={credential} 
+          onClose={() => setShowDiploma(false)} 
+        />
+      )}
     </div>
   );
 }
