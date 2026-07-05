@@ -28,7 +28,7 @@ function DiplomaModal({ credential, onClose }) {
   const studentDni = "XX.XXX.XXX";
 
   return (
-    <div className="diploma-scrim" onClick={onClose}>
+    <div className="diploma-scrim" onClick={(e) => { e.stopPropagation(); onClose(); }}>
       <div
         className="diploma-dialog"
         onClick={(e) => e.stopPropagation()}

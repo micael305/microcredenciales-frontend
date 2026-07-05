@@ -43,6 +43,7 @@
 /* ── Diploma — lenguaje visual de la tarjeta Open Graph (moderno, de marca) ── */
 .md3-certificate-illustration {
     position: relative;
+    width: 100%;
     max-width: min(100%, 1000px, calc(75vh * 1.414));
     aspect-ratio: 1.414 / 1; /* A4 apaisado */
     margin: 0 auto;
