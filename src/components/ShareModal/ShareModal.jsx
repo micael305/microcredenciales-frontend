@@ -66,15 +66,6 @@ function ShareModal({ credential, onClose }) {
   const ogShareTarget = API_BASE ? `${API_BASE}/api/public/verify/${hash}/embed` : shareLink;
   const postUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(ogShareTarget)}`;
 
-  // Copy-to-clipboard helper data: the exact fields LinkedIn's form asks for.
-  const linkedInFields = [
-    { key: 'name', label: 'Nombre de la certificación', value: credential.course_name || 'Microcredencial' },
-    { key: 'org', label: 'Empresa emisora', value: issuer },
-    { key: 'date', label: 'Fecha de expedición', value: formatMonthYear(issueDate) },
-    { key: 'id', label: 'ID de la credencial', value: hash },
-    { key: 'url', label: 'URL de la credencial', value: shareLink },
-  ].filter((f) => f.value);
-
   const copyValue = (text, key) => {
     navigator.clipboard.writeText(text);
     setCopiedKey(key);
@@ -178,32 +169,6 @@ function ShareModal({ credential, onClose }) {
               </a>
             </div>
 
-            {/* LinkedIn no longer auto-fills the certification form, so we hand
-                the user the exact values to paste. */}
-            <details className="share-fields">
-              <summary className="share-fields__summary">
-                Datos para completar el formulario de LinkedIn
-              </summary>
-              <p className="share-fields__hint">
-                LinkedIn abre el formulario vacío. Copiá y pegá estos datos:
-              </p>
-              {linkedInFields.map((f) => (
-                <div className="share-field" key={f.key}>
-                  <div className="share-field__text">
-                    <span className="share-field__label">{f.label}</span>
-                    <span className="share-field__value">{f.value}</span>
-                  </div>
-                  <button
-                    type="button"
-                    className="share-field__copy"
-                    onClick={() => copyValue(f.value, f.key)}
-                    aria-label={`Copiar ${f.label}`}
-                  >
-                    {copiedKey === f.key ? <MdCheck /> : <MdContentCopy />}
-                  </button>
-                </div>
-              ))}
-            </details>
           </div>
         </div>
 
